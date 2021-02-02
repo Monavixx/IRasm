@@ -30,10 +30,10 @@ QByteArray Method::Compile() const
 	QDataStream dsBody(&byteArrayBody, QIODevice::WriteOnly);
 	for (auto& item : body)
 	{
-		QByteArray compiledParameter = item->Compile();
-		for (int i = 0; i < compiledParameter.size(); ++i)
+		QByteArray compiledOpCode = item->Compile();
+		for (int i = 0; i < compiledOpCode.size(); ++i)
 		{
-			dsBody << (quint8)compiledParameter.at(i);
+			dsBody << (quint8)compiledOpCode.at(i);
 		}
 	}
 	ds << int(byteArrayBody.size());
@@ -47,5 +47,17 @@ QByteArray Method::Compile() const
 
 void Method::Add(OpBase* opCode)
 {
+	opCode->SetTags(&tags);
 	body.push_back(opCode);
+}
+
+void Method::AddTag(const QString& nameTag)
+{
+	int size = 0;
+	for (auto& item : body)
+	{
+		size += item->GetSize();
+	}
+
+	tags[nameTag] = size;
 }

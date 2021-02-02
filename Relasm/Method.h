@@ -8,9 +8,11 @@
 class Method
 {
 public:
+	Method() {}
 	Method(const QString& accessModifier, const QString& isStatic, const QString& dataType, const QString& declClass, const QString& name, const QList<Parameter>& parameters);
 	QByteArray Compile() const;
 	void Add(OpBase* opCode);
+	void AddTag(const QString& nameTag);
 
 private:
 	AccessModifier accessModifier;
@@ -20,6 +22,7 @@ private:
 	QString name;
 	QList<Parameter> parameters;
 	QList<OpBase*> body;
+	QMap<QString, int> tags;
 	
 	static inline quint8 byteOpCode = 4;
 	static inline QHash<QString, IsStatic> flagStatic = {

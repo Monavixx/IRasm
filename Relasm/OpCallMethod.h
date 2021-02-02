@@ -22,8 +22,8 @@ private:
 		{"static", STATIC}
 	};
 	static inline QHash<QString, quint8> flagStd = {
-		{"usr", 0},
-		{"std", 1}
+		{"usr", false},
+		{"std", true}
 	};
 };
 

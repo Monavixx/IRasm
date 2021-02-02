@@ -1,6 +1,8 @@
 #pragma once
 #include <QtCore>
 #include "Class.h"
+#include "Exit.h"
+#include "Signature.h"
 
 class Parser
 {
@@ -8,43 +10,45 @@ public:
 	Parser(const QString& code);
 	QList<Class> Parse();
 
+	Class* FindClassByName(const QString& name);
 
-	void CreateMainClass(const QStringList& args);
-	void CreateMethod(const QStringList& args);
-	void PushStr(const QStringList& args);
-	void CallMethod(const QStringList& args);
-	void New(const QStringList& args);
-	void CreateClass(const QStringList& args);
-	void Get(const QStringList& args);
-	void Set(const QStringList& args);
-	void Local(const QStringList& args);
-	void Gc(const QStringList& args);
-	void PushInt32(const QStringList& args);
-	void Return(const QStringList& args);
-	void Add(const QStringList& args);
-	void Dup(const QStringList& args);
-	void Jmp(const QStringList& args);
-	void Jmpif(const QStringList& args);
+
+	void CreateMainClass(const QStringList& args, Method* method);
+	void CreateMethod(const QStringList& args, Method* method);
+	void PushStr(const QStringList& args, Method* method);
+	void CallMethod(const QStringList& args, Method* method);
+	void New(const QStringList& args, Method* method);
+	void CreateClass(const QStringList& args, Method* method);
+	void Get(const QStringList& args, Method* method);
+	void Set(const QStringList& args, Method* method);
+	void Local(const QStringList& args, Method* method);
+	void Gc(const QStringList& args, Method* method);
+	void PushInt32(const QStringList& args, Method* method);
+	void Return(const QStringList& args, Method* method);
+	void Add(const QStringList& args, Method* method);
+	void Dup(const QStringList& args, Method* method);
+	void Jmp(const QStringList& args, Method* method);
+	void Jmpif(const QStringList& args, Method* method);
 
 private:
 	QString code;
-	QMap<QString, std::function<void(const QStringList& args)>> instructions =
+	QMap<QString, std::function<void(const QStringList&, Method*)>> instructions =
 	{
-		{"mclass", std::bind(&Parser::CreateMainClass, this, QStringList())},
-		{"method", std::bind(&Parser::CreateMethod, this, QStringList())},
-		{"push.str", std::bind(&Parser::PushStr, this, QStringList())},
-		{"new", std::bind(&Parser::New, this, QStringList())},
-		{"class", std::bind(&Parser::CreateClass, this, QStringList())},
-		{"get", std::bind(&Parser::Get, this, QStringList())},
-		{"set", std::bind(&Parser::Set, this, QStringList())},
-		{"local", std::bind(&Parser::Local, this, QStringList())},
-		{"gc", std::bind(&Parser::Gc, this, QStringList())},
-		{"push.int32", std::bind(&Parser::PushInt32, this, QStringList())},
-		{"return", std::bind(&Parser::Return, this, QStringList())},
-		{"add", std::bind(&Parser::Add, this, QStringList())},
-		{"dup", std::bind(&Parser::Dup, this, QStringList())},
-		{"jmp", std::bind(&Parser::Jmp, this, QStringList())},
-		{"jmpif", std::bind(&Parser::Jmpif, this, QStringList())},
+		{"mclass", std::bind(&Parser::CreateMainClass, this, QStringList(), new Method)},
+		{"method", std::bind(&Parser::CreateMethod, this, QStringList(), new Method)},
+		{"push.str", std::bind(&Parser::PushStr, this, QStringList(), new Method)},
+		{"new", std::bind(&Parser::New, this, QStringList(), new Method)},
+		{"class", std::bind(&Parser::CreateClass, this, QStringList(), new Method)},
+		{"get", std::bind(&Parser::Get, this, QStringList(), new Method)},
+		{"set", std::bind(&Parser::Set, this, QStringList(), new Method)},
+		{"local", std::bind(&Parser::Local, this, QStringList(), new Method)},
+		{"gc", std::bind(&Parser::Gc, this, QStringList(), new Method)},
+		{"push.int32", std::bind(&Parser::PushInt32, this, QStringList(), new Method)},
+		{"return", std::bind(&Parser::Return, this, QStringList(), new Method)},
+		{"add", std::bind(&Parser::Add, this, QStringList(), new Method)},
+		{"dup", std::bind(&Parser::Dup, this, QStringList(), new Method)},
+		{"jmp", std::bind(&Parser::Jmp, this, QStringList(), new Method)},
+		{"jmpif", std::bind(&Parser::Jmpif, this, QStringList(), new Method)},
 	};
 	QList<Class> classes;
 };

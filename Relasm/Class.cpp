@@ -14,7 +14,7 @@ QByteArray Class::Compile()
 
 	for (auto& item : methods)
 	{
-		QByteArray compiledParameter = item.Compile();
+		QByteArray compiledParameter = item->Compile();
 		for (int i = 0; i < compiledParameter.size(); ++i)
 		{
 			ds << (quint8)compiledParameter.at(i);
@@ -24,7 +24,12 @@ QByteArray Class::Compile()
 	return code;
 }
 
-void Class::Add(const Method& method)
+void Class::Add(Method* method)
 {
 	methods.push_back(method);
+}
+
+QString Class::GetName() const
+{
+	return name;
 }
