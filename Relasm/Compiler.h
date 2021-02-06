@@ -1,24 +1,10 @@
 #pragma once
 #include <QtCore>
 #include "Class.h"
-#include "OpPushStr.h"
-#include "OpJmp.h"
-#include "OpJmpif.h"
-#include "OpCallMethod.h"
-#include "OpNew.h"
-#include "OpSet.h"
-#include "OpGet.h"
-#include "OpLocal.h"
-#include "OpPushInt32.h"
-#include "OpAdd.h"
-#include "OpDup.h"
-#include "OpNewarr.h"
-#include "OpSetarr.h"
-#include "OpGetarr.h"
-#include "OpPushBool.h"
-#include "OpGc.h"
+#include "OpCodes.h"
 #include "ConsoleTextStream.h"
 #include "Exit.h"
+#include "Parser.h"
 
 class Compiler
 {
@@ -33,5 +19,8 @@ private:
 	QFile executebleFile;
 	QDataStream ds;
 	QList<Class*> classes;
+	QFile relasmFile;
+
+	int version = 2;
 };
 

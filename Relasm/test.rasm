@@ -1,9 +1,49 @@
-mclass NameMainClass
-method public static void NameMainClass.Main():
+mclass MainClass
+method public static void MainClass.Main():
+
+	local arraySize Relax.Int32
+	push.int32 10
+	set arraySize
+
+	local myArray Relax.Array
+	get arraySize
+	newarr Relax.Int32
+	set myArray
+
+	local i Relax.Int32
+
+	push.int32 0
+	set i
+	init:
+	get i
+	dup
+	get myArray
+	setarr
+	get i
 	push.int32 1
+	add
+	set i
+	get i
+	get arraySize
+	callm std instance Relax.Int32.operator==(Relax.Int32)
+	jmpif endInit
+	jmp init
+	endInit:
+
+	push.int32
+	set i
+	print:
+	get i
+	get myArray
+	getarr
+	callm std static Relax.Console.Write(Relax.Int32)
+	get i
 	push.int32 1
-	callm std instance Relax.Bool Relax.Int32.operator==(Relax.Int32)
-	jmpif End
-	push.str "hello world"
-	callm std static void Relax.Console.Write(Relax.String) 
-	End:
+	add
+	set i
+	get i
+	get arraySize
+	callm std instance Relax.Int32.operator==(Relax.Int32)
+	jmpif endPrint
+	jmp print
+	endPrint:

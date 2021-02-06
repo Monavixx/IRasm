@@ -4,9 +4,16 @@
 class OpLocal : public OpBase
 {
 public:
-	OpLocal(int id, const QString& dataType) : id(id), dataType(dataType){}
+	OpLocal(const QString& id, const QString& dataType) : id(currentId), dataType(dataType)
+	{
+		names[id] = currentId;
+		currentId++;
+	}
 	QByteArray Compile() override;
 
+
+	static inline QHash<QString, int> names;
+	static inline int currentId = 0;
 private:
 	int id;
 	QString dataType;

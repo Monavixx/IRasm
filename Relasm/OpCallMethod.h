@@ -5,13 +5,12 @@
 class OpCallMethod : public OpBase
 {
 public:
-	OpCallMethod(const QString& isStatic, const QString& isStd, const QString& dataType, const QString declClass, const QString name, const QList<QString>& parameters);
+	OpCallMethod(const QString& isStd, const QString& isStatic, const QString declClass, const QString name, const QList<QString>& parameters);
 	QByteArray Compile() override;
 
 private:
 	IsStatic isStatic;
 	bool isStd;
-	QString dataType;
 	QString declClass;
 	QString name;
 	QList<QString> parameters;

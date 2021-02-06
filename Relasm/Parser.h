@@ -3,53 +3,81 @@
 #include "Class.h"
 #include "Exit.h"
 #include "Signature.h"
+#include "Instruction.h"
+#include "OpCodes.h"
 
 class Parser
 {
 public:
 	Parser(const QString& code);
-	QList<Class> Parse();
+	QList<Class*> Parse();
+	QList<Instruction> StringListToInstruction(const QStringList& lineOfCode);
+	void Execute(const QList<Instruction>& instructions);
+	QStringList StringToSignature(const QString& strSignature);
+
 
 	Class* FindClassByName(const QString& name);
 
 
-	void CreateMainClass(const QStringList& args, Method* method);
-	void CreateMethod(const QStringList& args, Method* method);
-	void PushStr(const QStringList& args, Method* method);
-	void CallMethod(const QStringList& args, Method* method);
-	void New(const QStringList& args, Method* method);
-	void CreateClass(const QStringList& args, Method* method);
-	void Get(const QStringList& args, Method* method);
-	void Set(const QStringList& args, Method* method);
-	void Local(const QStringList& args, Method* method);
-	void Gc(const QStringList& args, Method* method);
-	void PushInt32(const QStringList& args, Method* method);
-	void Return(const QStringList& args, Method* method);
-	void Add(const QStringList& args, Method* method);
-	void Dup(const QStringList& args, Method* method);
-	void Jmp(const QStringList& args, Method* method);
-	void Jmpif(const QStringList& args, Method* method);
+	void CreateMainClass();
+	void CreateMethod();
+	void PushStr();
+	void CallMethod();
+	void New();
+	void CreateClass();
+	void Get();
+	void Set();
+	void Local();
+	void Gc();
+	void PushInt32();
+	void Return();
+	void Add();
+	void Dup();
+	void Jmp();
+	void Jmpif();
+	void Newarr();
+	void Getarr();
+	void Setarr();
+	void PushBool();
+	void PushFloat();
+	void Sub();
+	void Mul();
+	void Div();
 
 private:
-	QString code;
-	QMap<QString, std::function<void(const QStringList&, Method*)>> instructions =
+	Method* currentMethod = nullptr;
+	QStringList args;
+
+	static void ProccesCode(QStringList& code);
+
+	QString allCode;
+	QMap<QString, std::function<void()>> opCodes =
 	{
-		{"mclass", std::bind(&Parser::CreateMainClass, this, QStringList(), new Method)},
-		{"method", std::bind(&Parser::CreateMethod, this, QStringList(), new Method)},
-		{"push.str", std::bind(&Parser::PushStr, this, QStringList(), new Method)},
-		{"new", std::bind(&Parser::New, this, QStringList(), new Method)},
-		{"class", std::bind(&Parser::CreateClass, this, QStringList(), new Method)},
-		{"get", std::bind(&Parser::Get, this, QStringList(), new Method)},
-		{"set", std::bind(&Parser::Set, this, QStringList(), new Method)},
-		{"local", std::bind(&Parser::Local, this, QStringList(), new Method)},
-		{"gc", std::bind(&Parser::Gc, this, QStringList(), new Method)},
-		{"push.int32", std::bind(&Parser::PushInt32, this, QStringList(), new Method)},
-		{"return", std::bind(&Parser::Return, this, QStringList(), new Method)},
-		{"add", std::bind(&Parser::Add, this, QStringList(), new Method)},
-		{"dup", std::bind(&Parser::Dup, this, QStringList(), new Method)},
-		{"jmp", std::bind(&Parser::Jmp, this, QStringList(), new Method)},
-		{"jmpif", std::bind(&Parser::Jmpif, this, QStringList(), new Method)},
+		{"mclass", std::bind(&Parser::CreateMainClass, this)},
+		{"method", std::bind(&Parser::CreateMethod, this)},
+		{"push.str", std::bind(&Parser::PushStr, this)},
+		{"callm", std::bind(&Parser::CallMethod, this)},
+		{"new", std::bind(&Parser::New, this)},
+		{"class", std::bind(&Parser::CreateClass, this)},
+		{"get", std::bind(&Parser::Get, this)},
+		{"set", std::bind(&Parser::Set, this)},
+		{"local", std::bind(&Parser::Local, this)},
+		{"gc", std::bind(&Parser::Gc, this)},
+		{"push.int32", std::bind(&Parser::PushInt32, this)},
+		{"return", std::bind(&Parser::Return, this)},
+		{"add", std::bind(&Parser::Add, this)},
+		{"dup", std::bind(&Parser::Dup, this)},
+		{"jmp", std::bind(&Parser::Jmp, this)},
+		{"jmpif", std::bind(&Parser::Jmpif, this)},
+		{"newarr", std::bind(&Parser::Newarr, this)},
+		{"getarr", std::bind(&Parser::Getarr, this)},
+		{"setarr", std::bind(&Parser::Setarr, this)},
+		{"push.bool", std::bind(&Parser::PushBool, this)},
+		{"push.float", std::bind(&Parser::PushFloat, this)},
+		{"sub", std::bind(&Parser::Sub, this)},
+		{"mul", std::bind(&Parser::Mul, this)},
+		{"div", std::bind(&Parser::Div, this)}
 	};
-	QList<Class> classes;
+	QList<Class*> classes;
 };
 

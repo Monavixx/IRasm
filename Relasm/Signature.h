@@ -2,30 +2,30 @@
 #include <QtCore>
 #include "Parameter.h"
 
-struct Signature
+struct MethodData
 {
 	QString delcClass;
 	QString methodName;
 	QList<Parameter> parameters;
-	static Signature FromString(const QString& signature)
+	static MethodData FromString(const QString& methodData)
 	{
 		QString declClass;
 		QString methodName;
 		QList<Parameter> parameters;
 
-		int indexOfParameters = signature.indexOf("(");
+		int indexOfParameters = methodData.indexOf("(");
 
 		if (indexOfParameters == -1)
 			Exit("Error call method");
 
-		QString stringParameters = signature.mid(indexOfParameters + 1, signature.size() - indexOfParameters - 2);
-		int indexOfStartMethodName = signature.mid(0, indexOfParameters).lastIndexOf(".") + 1;
+		QString stringParameters = methodData.mid(indexOfParameters + 1, methodData.size() - indexOfParameters - 2);
+		int indexOfStartMethodName = methodData.mid(0, indexOfParameters).lastIndexOf(".") + 1;
 
 		if (indexOfStartMethodName == -1)
 			Exit("Error call method");
 
-		declClass = signature.mid(0, indexOfStartMethodName - 1);
-		methodName = signature.mid(indexOfStartMethodName, indexOfParameters - indexOfStartMethodName);
+		declClass = methodData.mid(0, indexOfStartMethodName - 1);
+		methodName = methodData.mid(indexOfStartMethodName, indexOfParameters - indexOfStartMethodName);
 
 		QString currentParameterDataType;
 		QString currentParameterName;
@@ -56,6 +56,6 @@ struct Signature
 			parameters.push_back(Parameter(currentParameterDataType, currentParameterName));
 		}
 
-		return Signature{ declClass, methodName, parameters };
+		return MethodData{ declClass, methodName, parameters};
 	}
 };

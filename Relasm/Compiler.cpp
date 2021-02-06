@@ -1,6 +1,6 @@
 #include "Compiler.h"
 
-Compiler::Compiler(QStringList arguments) : arguments(arguments), executebleFile(arguments[2]), ds(&executebleFile)
+Compiler::Compiler(QStringList arguments) : arguments(arguments), executebleFile(arguments[2]), ds(&executebleFile), relasmFile(arguments[1])
 {
 	
 }
@@ -11,66 +11,21 @@ void Compiler::Start()
 	{
 		Exit("executeble file don't open");
 	}
+	if (!relasmFile.open(QIODevice::ReadOnly))
+	{
+		Exit("relasm file don't open");
+	}
+
+	ds << version;
+
 	Parse();
 	Compile();
 }
 
 void Compiler::Parse()
 {
-	Class* mainClass = new Class("MainClass", true);
-	Method* mainMethod = new Method("public", "static", "void", "MainClass", "Main", {});
-	
-	mainMethod->Add(new OpLocal(1, "Relax.Array"));
-	mainMethod->Add(new OpPushInt32(3));
-	mainMethod->Add(new OpNewarr("Relax.Int32"));
-	mainMethod->Add(new OpDup);
-	mainMethod->Add(new OpDup);
-	mainMethod->Add(new OpDup);
-	mainMethod->Add(new OpDup);
-	mainMethod->Add(new OpDup);
-	mainMethod->Add(new OpDup);
-	mainMethod->Add(new OpDup);
-	mainMethod->Add(new OpSet(1));
-
-	mainMethod->Add(new OpPushInt32(0));
-	mainMethod->Add(new OpPushInt32(98));
-	mainMethod->Add(new OpSetarr);
-
-	mainMethod->Add(new OpPushInt32(1));
-	mainMethod->Add(new OpPushInt32(-8));
-	mainMethod->Add(new OpSetarr);
-
-	mainMethod->Add(new OpPushInt32(2));
-	mainMethod->Add(new OpPushInt32(1));
-	mainMethod->Add(new OpSetarr);
-
-	mainMethod->Add(new OpPushInt32(0));
-	mainMethod->Add(new OpGetarr);
-	mainMethod->Add(new OpCallMethod("static", "std", "void", "Relax.Console", "Write", {"Relax.Int32"}));
-	mainMethod->Add(new OpPushStr("\n"));
-	mainMethod->Add(new OpCallMethod("static", "std", "void", "Relax.Console", "Write", { "Relax.String" }));
-
-	mainMethod->Add(new OpPushInt32(1));
-	mainMethod->Add(new OpGetarr);
-	mainMethod->Add(new OpCallMethod("static", "std", "void", "Relax.Console", "Write", { "Relax.Int32" }));
-	mainMethod->Add(new OpPushStr("\n"));
-	mainMethod->Add(new OpCallMethod("static", "std", "void", "Relax.Console", "Write", { "Relax.String" }));
-
-	mainMethod->Add(new OpPushInt32(2));
-	mainMethod->Add(new OpGetarr);
-	mainMethod->Add(new OpCallMethod("static", "std", "void", "Relax.Console", "Write", { "Relax.Int32" }));
-	mainMethod->Add(new OpPushStr("\n"));
-	mainMethod->Add(new OpCallMethod("static", "std", "void", "Relax.Console", "Write", { "Relax.String" }));
-
-	mainMethod->Add(new OpPushInt32(1));
-	mainMethod->Add(new OpGetarr);
-	mainMethod->Add(new OpCallMethod("static", "std", "void", "Relax.Console", "Write", { "Relax.Int32" }));
-	mainMethod->Add(new OpPushStr("\n"));
-	mainMethod->Add(new OpCallMethod("static", "std", "void", "Relax.Console", "Write", { "Relax.String" }));
-
-
-	mainClass->Add(mainMethod);
-	classes.push_back(mainClass);
+	Parser parser(relasmFile.readAll());
+	classes = parser.Parse();
 }
 
 void Compiler::Compile()
