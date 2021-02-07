@@ -12,7 +12,8 @@ public:
 	Parser(const QString& code);
 	QList<Class*> Parse();
 	QList<Instruction> StringListToInstruction(const QStringList& lineOfCode);
-	void Execute(const QList<Instruction>& instructions);
+	void ExecuteAllCode(const QList<Instruction>& instructions);
+	void ExecuteMethod(const QList<Instruction>& instructions);
 	QStringList StringToSignature(const QString& strSignature);
 
 

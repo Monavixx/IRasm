@@ -11,7 +11,7 @@ QList<Class*> Parser::Parse()
 	
 	QList<Instruction> instructions = StringListToInstruction(code);
 
-	Execute(instructions);
+	ExecuteAllCode(instructions);
 
 	return classes;
 }
@@ -29,19 +29,14 @@ QList<Instruction> Parser::StringListToInstruction(const QStringList& lineOfCode
 	return instructions;
 }
 
-void Parser::Execute(const QList<Instruction>& instructions)
+void Parser::ExecuteAllCode(const QList<Instruction>& instructions)
 {
 	for (int i = 0; i < instructions.size(); ++i)
 	{
 		QString instructionName = instructions[i].name;
-
-		if (QRegExp("[a-zA-Z0-9]+:").exactMatch(instructionName))
-		{
-			currentMethod->AddTag(instructionName.mid(0, instructionName.size() - 1));
-			continue;
-		}
-
+		if (instructionName[0] == '\t') continue;
 		bool isOpenQuate = false;
+		int amountOpenBraces = 0;
 		QString currentArg;
 		QStringList args;
 		for (int j = 0; j < instructions[i].args.size(); ++j)
@@ -51,7 +46,7 @@ void Parser::Execute(const QList<Instruction>& instructions)
 				isOpenQuate = !isOpenQuate;
 				currentArg.push_back(instructions[i].args[j]);
 			}
-			else if (instructions[i].args[j] == ' ' && !isOpenQuate)
+			else if (instructions[i].args[j] == ' ' && !isOpenQuate && amountOpenBraces == 0)
 			{
 				args.push_back(currentArg);
 				currentArg = "";
@@ -60,6 +55,10 @@ void Parser::Execute(const QList<Instruction>& instructions)
 			{
 				currentArg.push_back(instructions[i].args[j]);
 			}
+
+
+			if (instructions[i].args[j] == '(') ++amountOpenBraces;
+			if (instructions[i].args[j] == ')') --amountOpenBraces;
 		}
 		bool isHasCode = false;
 		if (!(currentArg == "" && args.isEmpty()))
@@ -92,6 +91,53 @@ void Parser::Execute(const QList<Instruction>& instructions)
 				}
 			}
 			args.push_back(code);
+			if(i < instructions.size() - 1)
+				--i;
+		}
+
+		if (opCodes.contains(instructionName))
+		{
+			this->args = args;
+			opCodes[instructionName]();
+		}
+	}
+}
+
+void Parser::ExecuteMethod(const QList<Instruction>& instructions)
+{
+	for (int i = 0; i < instructions.size(); ++i)
+	{
+		QString instructionName = instructions[i].name;
+
+		if (QRegExp("[a-zA-Z0-9]+:").exactMatch(instructionName))
+		{
+			currentMethod->AddTag(instructionName.mid(0, instructionName.size() - 1));
+			continue;
+		}
+
+		bool isOpenQuate = false;
+		QString currentArg;
+		QStringList args;
+		for (int j = 0; j < instructions[i].args.size(); ++j)
+		{
+			if (instructions[i].args[j] == '\"')
+			{
+				isOpenQuate = !isOpenQuate;
+				currentArg.push_back(instructions[i].args[j]);
+			}
+			else if (instructions[i].args[j] == ' ' && !isOpenQuate)
+			{
+				args.push_back(currentArg);
+				currentArg = "";
+			}
+			else
+			{
+				currentArg.push_back(instructions[i].args[j]);
+			}
+		}
+		if (!(currentArg == "" && args.isEmpty()))
+		{
+			args.push_back(currentArg);
 		}
 
 		if (opCodes.contains(instructionName))
@@ -202,7 +248,7 @@ void Parser::CreateMethod()
 	declClass->Add(creatableMethod);
 	currentMethod = creatableMethod;
 
-	Execute(StringListToInstruction(args[4].split('\n')));
+	ExecuteMethod(StringListToInstruction(args[4].split('\n')));
 }
 
 void Parser::PushStr()
