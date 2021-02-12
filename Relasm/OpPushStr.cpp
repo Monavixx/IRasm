@@ -2,6 +2,7 @@
 
 OpPushStr::OpPushStr(const QString& data) : data(data)
 {
+    this->data.replace("\\n", "\n");
 }
 
 QByteArray OpPushStr::Compile()

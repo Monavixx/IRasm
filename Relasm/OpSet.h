@@ -9,7 +9,7 @@ public:
 	OpSet(const QString& id)
 	{
 		if (!OpLocal::names.contains(id))
-			Exit("get: variable " + id + " not found");
+			Exit("set: variable " + id + " not found");
 		this->id = OpLocal::names[id];
 	}
 	QByteArray Compile() override;

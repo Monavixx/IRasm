@@ -44,6 +44,7 @@ public:
 	void Sub();
 	void Mul();
 	void Div();
+	void Cast();
 
 private:
 	Method* currentMethod = nullptr;
@@ -77,7 +78,8 @@ private:
 		{"push.float", std::bind(&Parser::PushFloat, this)},
 		{"sub", std::bind(&Parser::Sub, this)},
 		{"mul", std::bind(&Parser::Mul, this)},
-		{"div", std::bind(&Parser::Div, this)}
+		{"div", std::bind(&Parser::Div, this)},
+		{"cast", std::bind(&Parser::Cast, this)}
 	};
 	QList<Class*> classes;
 };

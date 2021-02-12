@@ -1,9 +1,32 @@
 mclass MainClass
 method public static void MainClass.Main():
-	push.int32 56
-	callm usr static MainClass.Lol(Relax.Int32)
-	callm std static Relax.Console.Write(Relax.Int32)
-method public static Relax.Int32 MainClass.Lol(Relax.Int32 num):
+	local size Relax.Int32
+	local array Relax.Array
+	local iterator Relax.Int32
+
+	push.int32 10000
+	dup
+	set size
+
+	newarr Relax.Int32
+	set array
+
+	push.int32 0
+	set iterator
+
+	for:
+	get iterator
+	dup
+	get array
+	setarr
+	get iterator
 	push.int32 1
 	add
-	return
+	dup
+	set iterator
+	get size
+	callm std instance Relax.Int32.operator==(Relax.Int32)
+	jmpif end
+	gc
+	jmp for
+	end:

@@ -53,11 +53,5 @@ void Method::Add(OpBase* opCode)
 
 void Method::AddTag(const QString& nameTag)
 {
-	int size = 0;
-	for (auto& item : body)
-	{
-		size += item->GetSize();
-	}
-
-	tags[nameTag] = size;
+	tags[nameTag] = body.size();
 }

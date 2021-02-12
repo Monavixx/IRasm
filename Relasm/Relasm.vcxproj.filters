@@ -116,6 +116,9 @@
     <ClCompile Include="OpDiv.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OpCast.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
@@ -219,6 +222,9 @@
     </ClInclude>
     <ClInclude Include="Instruction.h">
       <Filter>Header Files\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="OpCast.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

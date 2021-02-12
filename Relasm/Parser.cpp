@@ -411,3 +411,10 @@ void Parser::Div()
 		Exit("div: must be in method");
 	currentMethod->Add(new OpDiv);
 }
+
+void Parser::Cast()
+{
+	if (currentMethod == nullptr)
+		Exit("cast: must be in method");
+	currentMethod->Add(new OpCast(args[0], args[1]));
+}
