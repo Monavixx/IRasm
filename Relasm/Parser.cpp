@@ -290,21 +290,21 @@ void Parser::Get()
 {
 	if (currentMethod == nullptr)
 		Exit("get: must be in method");
-	currentMethod->Add(new OpGet(args[0]));
+	currentMethod->Add(new OpGet(args[0], currentMethod));
 }
 
 void Parser::Set()
 {
 	if (currentMethod == nullptr)
 		Exit("set: must be in method");
-	currentMethod->Add(new OpSet(args[0]));
+	currentMethod->Add(new OpSet(args[0], currentMethod));
 }
 
 void Parser::Local()
 {
 	if (currentMethod == nullptr)
 		Exit("local: must be in method");
-	currentMethod->Add(new OpLocal(args[0], args[1]));
+	currentMethod->Add(new OpLocal(args[0], args[1], currentMethod));
 }
 
 void Parser::Gc()

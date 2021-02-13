@@ -1,16 +1,17 @@
 #pragma once
 #include "OpBase.h"
-#include "OpLocal.h"
 #include "Exit.h"
+#include "Method.h"
 
 class OpSet : public OpBase
 {
 public:
-	OpSet(const QString& id)
+	OpSet(const QString& id, Method* method)
 	{
-		if (!OpLocal::names.contains(id))
+		this->method = method;
+		if (!method->names.contains(id))
 			Exit("set: variable " + id + " not found");
-		this->id = OpLocal::names[id];
+		this->id = method->names[id];
 	}
 	QByteArray Compile() override;
 

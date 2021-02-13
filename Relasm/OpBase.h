@@ -10,6 +10,8 @@ public:
 	{
 		this->tags = tags;
 	}
+	void SetMethod(class Method* method);
 protected:
 	QMap<QString, int>* tags;
+	class Method* method;
 };

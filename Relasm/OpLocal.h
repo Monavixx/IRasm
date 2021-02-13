@@ -1,19 +1,18 @@
 #pragma once
 #include "OpBase.h"
+#include "Method.h"
 
 class OpLocal : public OpBase
 {
 public:
-	OpLocal(const QString& id, const QString& dataType) : id(currentId), dataType(dataType)
+	OpLocal(const QString& id, const QString& dataType, Method* method) : id(method->currentId), dataType(dataType)
 	{
-		names[id] = currentId;
-		currentId++;
+		this->method = method;
+		method->names[id] = method->currentId;
+		method->currentId++;
 	}
 	QByteArray Compile() override;
 
-
-	static inline QHash<QString, int> names;
-	static inline int currentId = 0;
 private:
 	int id;
 	QString dataType;

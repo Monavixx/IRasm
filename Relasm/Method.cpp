@@ -3,6 +3,11 @@
 Method::Method(const QString& accessModifier, const QString& isStatic, const QString& dataType, const QString& declClass, const QString& name, const QList<Parameter>& parameters)
 	: accessModifier(flagAccessModifier[accessModifier]), isStatic(flagStatic[isStatic]), dataType(dataType), declClass(declClass), name(name), parameters(parameters)
 {
+	for (auto& item : this->parameters)
+	{
+		names[item.GetName()] = currentId;
+		++currentId;
+	}
 }
 
 QByteArray Method::Compile() const

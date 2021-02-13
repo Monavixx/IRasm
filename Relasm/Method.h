@@ -13,7 +13,9 @@ public:
 	QByteArray Compile() const;
 	void Add(OpBase* opCode);
 	void AddTag(const QString& nameTag);
-
+	
+	QHash<QString, int> names;
+	int currentId = 0;
 private:
 	AccessModifier accessModifier;
 	IsStatic isStatic;
@@ -23,6 +25,7 @@ private:
 	QList<Parameter> parameters;
 	QList<OpBase*> body;
 	QMap<QString, int> tags;
+
 	
 	static inline quint8 byteOpCode = 4;
 	static inline QHash<QString, IsStatic> flagStatic = {
