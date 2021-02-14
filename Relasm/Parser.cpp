@@ -206,6 +206,19 @@ void Parser::ProccesCode(QStringList& code)
 		}
 		item.replace(", ", ",");
 		item.replace(" :", ":");
+
+		bool isOpenQuate = false;
+		int index = item.size();
+		for (int i = 0; i < item.size(); ++i)
+		{
+			if (item[i] == "\"") isOpenQuate = !isOpenQuate;
+			if (item[i] == ';')
+			{
+				index = i;
+				break;
+			}
+		}
+		item = item.mid(0, index);
 	}
 	code.removeAll("");
 	code.removeAll("\t");
