@@ -45,6 +45,7 @@ public:
 	void Mul();
 	void Div();
 	void Cast();
+	void MaxStack();
 
 private:
 	Method* currentMethod = nullptr;
@@ -79,7 +80,8 @@ private:
 		{"sub", std::bind(&Parser::Sub, this)},
 		{"mul", std::bind(&Parser::Mul, this)},
 		{"div", std::bind(&Parser::Div, this)},
-		{"cast", std::bind(&Parser::Cast, this)}
+		{"cast", std::bind(&Parser::Cast, this)},
+		{".maxstack", std::bind(&Parser::MaxStack, this)}
 	};
 	QList<Class*> classes;
 };

@@ -119,6 +119,9 @@
     <ClCompile Include="OpCast.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OpMaxStack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
@@ -223,8 +226,11 @@
     <ClInclude Include="Instruction.h">
       <Filter>Header Files\Parser</Filter>
     </ClInclude>
+    <ClInclude Include="OpMaxStack.h">
+      <Filter>Header Files\OpCodes</Filter>
+    </ClInclude>
     <ClInclude Include="OpCast.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\OpCodes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

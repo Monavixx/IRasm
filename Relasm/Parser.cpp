@@ -431,3 +431,10 @@ void Parser::Cast()
 		Exit("cast: must be in method");
 	currentMethod->Add(new OpCast(args[0], args[1]));
 }
+
+void Parser::MaxStack()
+{
+	if (currentMethod == nullptr)
+		Exit(".maxstack: must be in method");
+	currentMethod->Add(new OpMaxStack(args[0].toInt()));
+}

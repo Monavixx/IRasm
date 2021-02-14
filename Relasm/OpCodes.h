@@ -21,3 +21,4 @@
 #include "OpMul.h"
 #include "OpDiv.h"
 #include "OpCast.h"
+#include "OpMaxStack.h"

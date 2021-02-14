@@ -21,6 +21,6 @@ private:
 	QList<Class*> classes;
 	QFile relasmFile;
 
-	const int version = 3;
+	const int version = 4;
 };
 
