@@ -46,7 +46,9 @@ public:
 	void Div();
 	void Cast();
 	void MaxStack();
-
+	void Ref();
+	void Deref();
+	void Setpd();
 private:
 	Method* currentMethod = nullptr;
 	QStringList args;
@@ -81,7 +83,10 @@ private:
 		{"mul", std::bind(&Parser::Mul, this)},
 		{"div", std::bind(&Parser::Div, this)},
 		{"cast", std::bind(&Parser::Cast, this)},
-		{".maxstack", std::bind(&Parser::MaxStack, this)}
+		{".maxstack", std::bind(&Parser::MaxStack, this)},
+		{"ref", std::bind(&Parser::Ref, this)},
+		{"deref", std::bind(&Parser::Deref, this)},
+		{"setpd", std::bind(&Parser::Setpd, this)}
 	};
 	QList<Class*> classes;
 };

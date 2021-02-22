@@ -122,6 +122,15 @@
     <ClCompile Include="OpMaxStack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OpRef.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpDeref.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpSetpd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
@@ -231,6 +240,15 @@
     </ClInclude>
     <ClInclude Include="OpCast.h">
       <Filter>Header Files\OpCodes</Filter>
+    </ClInclude>
+    <ClInclude Include="OpRef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpDeref.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpSetpd.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

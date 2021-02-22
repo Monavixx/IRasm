@@ -438,3 +438,24 @@ void Parser::MaxStack()
 		Exit(".maxstack: must be in method");
 	currentMethod->Add(new OpMaxStack(args[0].toInt()));
 }
+
+void Parser::Ref()
+{
+	if (currentMethod == nullptr)
+		Exit("ref: must be in method");
+	currentMethod->Add(new OpRef(args[0]));
+}
+
+void Parser::Deref()
+{
+	if (currentMethod == nullptr)
+		Exit("deref: must be in method");
+	currentMethod->Add(new OpDeref);
+}
+
+void Parser::Setpd()
+{
+	if (currentMethod == nullptr)
+		Exit("setpd: must be in method");
+	currentMethod->Add(new OpSetpd);
+}

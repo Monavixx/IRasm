@@ -22,3 +22,6 @@
 #include "OpDiv.h"
 #include "OpCast.h"
 #include "OpMaxStack.h"
+#include "OpRef.h"
+#include "OpDeref.h"
+#include "OpSetpd.h"

@@ -112,6 +112,7 @@
     <ClCompile Include="OpBase.cpp" />
     <ClCompile Include="OpCallMethod.cpp" />
     <ClCompile Include="OpCast.cpp" />
+    <ClCompile Include="OpDeref.cpp" />
     <ClCompile Include="OpDiv.cpp" />
     <ClCompile Include="OpDup.cpp" />
     <ClCompile Include="OpGc.cpp" />
@@ -127,9 +128,11 @@
     <ClCompile Include="OpPushBool.cpp" />
     <ClCompile Include="OpPushFloat.cpp" />
     <ClCompile Include="OpPushInt32.cpp" />
+    <ClCompile Include="OpRef.cpp" />
     <ClCompile Include="OpReturn.cpp" />
     <ClCompile Include="OpSet.cpp" />
     <ClCompile Include="OpSetarr.cpp" />
+    <ClCompile Include="OpSetpd.cpp" />
     <ClCompile Include="OpSub.cpp" />
     <ClCompile Include="Parameter.cpp" />
     <ClCompile Include="Parser.cpp" />
@@ -149,6 +152,7 @@
     <ClInclude Include="OpCallMethod.h" />
     <ClInclude Include="OpCast.h" />
     <ClInclude Include="OpCodes.h" />
+    <ClInclude Include="OpDeref.h" />
     <ClInclude Include="OpDiv.h" />
     <ClInclude Include="OpDup.h" />
     <ClInclude Include="OpGc.h" />
@@ -164,9 +168,11 @@
     <ClInclude Include="OpPushBool.h" />
     <ClInclude Include="OpPushFloat.h" />
     <ClInclude Include="OpPushInt32.h" />
+    <ClInclude Include="OpRef.h" />
     <ClInclude Include="OpReturn.h" />
     <ClInclude Include="OpSet.h" />
     <ClInclude Include="OpSetarr.h" />
+    <ClInclude Include="OpSetpd.h" />
     <ClInclude Include="OpSub.h" />
     <ClInclude Include="Parameter.h" />
     <ClInclude Include="Parser.h" />
