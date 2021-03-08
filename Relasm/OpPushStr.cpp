@@ -10,6 +10,6 @@ QByteArray OpPushStr::Compile()
     QByteArray code;
     QDataStream ds(&code, QIODevice::WriteOnly);
     ds << byteOpCode;
-    ds << data.toUtf8();
+    ds << data;
     return code;
 }

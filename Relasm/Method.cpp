@@ -17,9 +17,9 @@ QByteArray Method::Compile() const
 
 	ds << byteOpCode;
 	ds << quint8(accessModifier) << quint8(isStatic);
-	ds << dataType.toUtf8();
-	ds << declClass.toUtf8();
-	ds << name.toUtf8();
+	ds << dataType;
+	ds << declClass;
+	ds << name;
 	ds << int(parameters.size());
 	for (auto& item : parameters)
 	{

@@ -49,6 +49,7 @@ public:
 	void Ref();
 	void Deref();
 	void Setpd();
+	void Import();
 private:
 	Method* currentMethod = nullptr;
 	QStringList args;
@@ -86,7 +87,8 @@ private:
 		{".maxstack", std::bind(&Parser::MaxStack, this)},
 		{"ref", std::bind(&Parser::Ref, this)},
 		{"deref", std::bind(&Parser::Deref, this)},
-		{"setpd", std::bind(&Parser::Setpd, this)}
+		{"setpd", std::bind(&Parser::Setpd, this)},
+		{"import", std::bind(&Parser::Import, this)}
 	};
 	QList<Class*> classes;
 };

@@ -4,11 +4,11 @@
 class OpPushFloat : public OpBase
 {
 public:
-	OpPushFloat(float data) : data(data) {}
+	OpPushFloat(int num, int fracPart) : num(num), fracPart(fracPart) {}
 	QByteArray Compile() override;
 
 private:
-	float data;
+	int num, fracPart;
 
 	static inline quint8 byteOpCode = 21;
 };

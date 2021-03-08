@@ -13,12 +13,12 @@ QByteArray OpCallMethod::Compile()
 	ds << byteOpCode;
 	ds << quint8(isStd);
 	ds << quint8(isStatic);
-	ds << declClass.toUtf8();
-	ds << name.toUtf8();
+	ds << declClass;
+	ds << name;
 	ds << int(parameters.size());
 	for (auto& item : parameters)
 	{
-		ds << item.toUtf8();
+		ds << item;
 	}
 
 	return code;

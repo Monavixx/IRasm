@@ -94,7 +94,7 @@ void Parser::ExecuteAllCode(const QList<Instruction>& instructions)
 			if(i < instructions.size() - 1)
 				--i;
 		}
-
+		
 		if (opCodes.contains(instructionName))
 		{
 			this->args = args;
@@ -109,7 +109,7 @@ void Parser::ExecuteMethod(const QList<Instruction>& instructions)
 	{
 		QString instructionName = instructions[i].name;
 
-		if (QRegExp("[a-zA-Z0-9]+:").exactMatch(instructionName))
+		if (QRegExp("[a-zA-Z0-9_]+:").exactMatch(instructionName))
 		{
 			currentMethod->AddTag(instructionName.mid(0, instructionName.size() - 1));
 			continue;
@@ -401,7 +401,10 @@ void Parser::PushFloat()
 {
 	if (currentMethod == nullptr)
 		Exit("push.float: must be in method");
-	currentMethod->Add(new OpPushFloat(args[0].toFloat()));
+	
+	QStringList splitedFloat = args[0].split('.');
+	int num = splitedFloat[0].toInt(), fracPart = splitedFloat[1].toInt();
+	currentMethod->Add(new OpPushFloat(num, fracPart));
 }
 
 void Parser::Sub()
@@ -458,4 +461,18 @@ void Parser::Setpd()
 	if (currentMethod == nullptr)
 		Exit("setpd: must be in method");
 	currentMethod->Add(new OpSetpd);
+}
+
+void Parser::Import()
+{
+	if (currentMethod != nullptr)
+		Exit("import: cannot be in method");
+	QString moduleFilename = args[0];
+	QFile moduleFile(moduleFilename);
+	if (!moduleFile.open(QIODevice::ReadOnly))
+	{
+		Exit("module " + moduleFilename + " not exists");
+	}
+	Parser moduleParser(moduleFile.readAll());
+	classes += moduleParser.Parse();
 }

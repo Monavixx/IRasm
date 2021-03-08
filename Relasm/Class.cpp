@@ -10,7 +10,7 @@ QByteArray Class::Compile()
 	QDataStream ds(&code, QIODevice::WriteOnly);
 
 	quint8 currentByteOpCode = (isMainClass) ? (byteMainClassOpCode) : (byteOpCode);
-	ds << currentByteOpCode << name.toUtf8();
+	ds << currentByteOpCode << name;
 
 	for (auto& item : methods)
 	{

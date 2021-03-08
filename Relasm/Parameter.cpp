@@ -8,7 +8,7 @@ QByteArray Parameter::Compile() const
 {
 	QByteArray code;
 	QDataStream ds(&code, QIODevice::WriteOnly);
-	ds << dataType.toUtf8();
-	ds << name.toUtf8();
+	ds << dataType;
+	ds << name;
 	return code;
 }

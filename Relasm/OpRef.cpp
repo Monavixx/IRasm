@@ -5,7 +5,7 @@ QByteArray OpRef::Compile()
 	QByteArray code;
 	QDataStream ds(&code, QIODevice::WriteOnly);
 
-	ds << byteOpCode << dataType.toUtf8();
+	ds << byteOpCode << dataType;
 
 	return code;
 }

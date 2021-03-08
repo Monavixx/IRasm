@@ -10,10 +10,10 @@ QByteArray OpNew::Compile()
 	QByteArray code;
 	QDataStream ds(&code, QIODevice::WriteOnly);
 
-	ds << byteOpCode << quint8(isStd) << dataType.toUtf8();
+	ds << byteOpCode << quint8(isStd) << dataType;
 	for (auto& item : parameters)
 	{
-		ds << item.toUtf8();
+		ds << item;
 	}
 
 	return code;
