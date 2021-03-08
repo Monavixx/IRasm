@@ -5,12 +5,11 @@
 class OpCallMethod : public OpBase
 {
 public:
-	OpCallMethod(const QString& isStd, const QString& isStatic, const QString declClass, const QString name, const QList<QString>& parameters);
+	OpCallMethod(const QString& isStatic, const QString declClass, const QString name, const QList<QString>& parameters);
 	QByteArray Compile() override;
 
 private:
 	IsStatic isStatic;
-	bool isStd;
 	QString declClass;
 	QString name;
 	QList<QString> parameters;
@@ -19,10 +18,6 @@ private:
 	static inline QHash<QString, IsStatic> flagStatic = {
 		{"instance", INSTANCE},
 		{"static", STATIC}
-	};
-	static inline QHash<QString, quint8> flagStd = {
-		{"usr", false},
-		{"std", true}
 	};
 };
 

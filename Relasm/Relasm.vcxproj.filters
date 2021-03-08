@@ -241,14 +241,14 @@
     <ClInclude Include="OpCast.h">
       <Filter>Header Files\OpCodes</Filter>
     </ClInclude>
-    <ClInclude Include="OpRef.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OpDeref.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\OpCodes</Filter>
+    </ClInclude>
+    <ClInclude Include="OpRef.h">
+      <Filter>Header Files\OpCodes</Filter>
     </ClInclude>
     <ClInclude Include="OpSetpd.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\OpCodes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

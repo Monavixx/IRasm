@@ -276,9 +276,9 @@ void Parser::CallMethod()
 	if (currentMethod == nullptr)
 		Exit("callm: must be in method");
 
-	QString strSignature = args[2];
+	QString strSignature = args[1];
 	QStringList signature = StringToSignature(strSignature);
-	currentMethod->Add(new OpCallMethod(args[0], args[1], signature[0], signature[1], signature.mid(2)));
+	currentMethod->Add(new OpCallMethod(args[0], signature[0], signature[1], signature.mid(2)));
 }
 
 void Parser::New()
@@ -286,9 +286,9 @@ void Parser::New()
 	if (currentMethod == nullptr)
 		Exit("new: must be in method");
 
-	QString strSignature = args[2];
+	QString strSignature = args[1];
 	QStringList signature = StringToSignature(strSignature);
-	currentMethod->Add(new OpCallMethod(args[0], args[1], signature[0], signature[1], signature.mid(2)));
+	currentMethod->Add(new OpCallMethod(args[0], signature[0], signature[1], signature.mid(2)));
 }
 
 void Parser::CreateClass()
@@ -432,7 +432,7 @@ void Parser::Cast()
 {
 	if (currentMethod == nullptr)
 		Exit("cast: must be in method");
-	currentMethod->Add(new OpCast(args[0], args[1]));
+	currentMethod->Add(new OpCast(args[0]));
 }
 
 void Parser::MaxStack()

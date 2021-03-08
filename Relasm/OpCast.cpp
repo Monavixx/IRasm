@@ -5,7 +5,7 @@ QByteArray OpCast::Compile()
 	QByteArray code;
 	QDataStream ds(&code, QIODevice::WriteOnly);
 
-	ds << byteOpCode << (quint8)isStd << dataType;
+	ds << byteOpCode << dataType;
 
 	return code;
 }
