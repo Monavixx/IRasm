@@ -34,7 +34,7 @@ void Parser::ExecuteAllCode(const QList<Instruction>& instructions)
 	for (int i = 0; i < instructions.size(); ++i)
 	{
 		QString instructionName = instructions[i].name;
-		if (instructionName[0] == '\t') continue;
+		if (instructionName[0] == '\t ') continue;
 		bool isOpenQuate = false;
 		int amountOpenBraces = 0;
 		QString currentArg;
@@ -75,7 +75,7 @@ void Parser::ExecuteAllCode(const QList<Instruction>& instructions)
 			{
 				if (instructions.size() - 1 >= i)
 				{
-					if (instructions[i].name[0] == '\t')
+					if (instructions[i].name[0] == '\t' || instructions[i].name[0] == ' ')
 					{
 						code += instructions[i].name.mid(1) + " " + instructions[i].args + "\n";
 						++i;
@@ -195,7 +195,7 @@ void Parser::ProccesCode(QStringList& code)
 	code.removeAll("");
 	for (auto& item : code)
 	{
-		bool isPartMethod = item[0] == "\t";
+		bool isPartMethod = item[0] == "\t" || item[0] == " ";
 		item.replace(QRegExp("[ \f\t\v\u00A0]+"), " ");
 		item.remove('\n');
 		item.remove('\r');
@@ -475,4 +475,30 @@ void Parser::Import()
 	}
 	Parser moduleParser(moduleFile.readAll());
 	classes += moduleParser.Parse();
+}
+
+void Parser::Field()
+{
+	if (currentMethod != nullptr)
+		Exit("field: cannot be in method");
+
+	QString declClassName, name;
+	size_t lastIndex = args[3].lastIndexOf(".");
+	declClassName = args[3].mid(0, lastIndex);
+	declClassName = args[3].mid(lastIndex);
+	currentMethod->Add(new OpField(args[0], args[1], args[2], declClassName, name));
+}
+
+void Parser::Getfield()
+{
+	if (currentMethod == nullptr)
+		Exit("getfield: must be in method");
+	currentMethod->Add(new OpGetfield(args[0]));
+}
+
+void Parser::Setfield()
+{
+	if (currentMethod == nullptr)
+		Exit("setfield: must be in method");
+	currentMethod->Add(new OpSetfield(args[0]));
 }

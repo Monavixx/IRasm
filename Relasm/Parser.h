@@ -50,6 +50,9 @@ public:
 	void Deref();
 	void Setpd();
 	void Import();
+	void Field();
+	void Getfield();
+	void Setfield();
 private:
 	Method* currentMethod = nullptr;
 	QStringList args;
@@ -88,7 +91,10 @@ private:
 		{"ref", std::bind(&Parser::Ref, this)},
 		{"deref", std::bind(&Parser::Deref, this)},
 		{"setpd", std::bind(&Parser::Setpd, this)},
-		{"import", std::bind(&Parser::Import, this)}
+		{"import", std::bind(&Parser::Import, this)},
+		{"field", std::bind(&Parser::Field, this)},
+		{"getfield", std::bind(&Parser::Getfield, this)},
+		{"setfield", std::bind(&Parser::Setfield, this)}
 	};
 	QList<Class*> classes;
 };
