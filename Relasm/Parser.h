@@ -53,6 +53,7 @@ public:
 	void Field();
 	void Getfield();
 	void Setfield();
+	void This();
 private:
 	Method* currentMethod = nullptr;
 	QStringList args;
@@ -94,7 +95,8 @@ private:
 		{"import", std::bind(&Parser::Import, this)},
 		{"field", std::bind(&Parser::Field, this)},
 		{"getfield", std::bind(&Parser::Getfield, this)},
-		{"setfield", std::bind(&Parser::Setfield, this)}
+		{"setfield", std::bind(&Parser::Setfield, this)},
+		{"this", std::bind(&Parser::This, this)}
 	};
 	QList<Class*> classes;
 };

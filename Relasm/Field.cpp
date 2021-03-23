@@ -1,6 +1,6 @@
-#include "OpField.h"
+#include "Field.h"
 
-QByteArray OpField::Compile()
+QByteArray Field::Compile()
 {
 	QByteArray code;
 	QDataStream ds(&code, QIODevice::WriteOnly);

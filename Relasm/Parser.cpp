@@ -22,9 +22,16 @@ QList<Instruction> Parser::StringListToInstruction(const QStringList& lineOfCode
 	for (int i = 0; i < lineOfCode.size(); ++i)
 	{
 		int index = lineOfCode[i].indexOf(' ');
-		QString opcode = lineOfCode[i].mid(0, index);
-		QString args = lineOfCode[i].mid(index + 1);
-		instructions << Instruction{ opcode, args };
+		if (index != -1)
+		{
+			QString opcode = lineOfCode[i].mid(0, index);
+			QString args = lineOfCode[i].mid(index + 1);
+			instructions << Instruction{ opcode, args };
+		}
+		else
+		{
+			instructions << Instruction{ lineOfCode[i], "" };
+		}
 	}
 	return instructions;
 }
@@ -90,8 +97,8 @@ void Parser::ExecuteAllCode(const QList<Instruction>& instructions)
 					break;
 				}
 			}
-			args.push_back(code);
-			if(i < instructions.size() - 1)
+			args.push_back(code.mid(0, code.size()-1));
+			//if(i < instructions.size() - 1)
 				--i;
 		}
 		
@@ -286,9 +293,15 @@ void Parser::New()
 	if (currentMethod == nullptr)
 		Exit("new: must be in method");
 
-	QString strSignature = args[1];
-	QStringList signature = StringToSignature(strSignature);
-	currentMethod->Add(new OpCallMethod(args[0], signature[0], signature[1], signature.mid(2)));
+	QString className, strParameters, strSignature = args[0];
+
+	QStringList splittedSignature = strSignature.split('(');
+	className = splittedSignature[0];
+	strParameters = splittedSignature[1].mid(0, splittedSignature[1].size()-1);
+	QStringList parameters = strParameters.split(',');
+
+
+	currentMethod->Add(new OpNew(className, parameters));
 }
 
 void Parser::CreateClass()
@@ -485,8 +498,9 @@ void Parser::Field()
 	QString declClassName, name;
 	size_t lastIndex = args[3].lastIndexOf(".");
 	declClassName = args[3].mid(0, lastIndex);
-	declClassName = args[3].mid(lastIndex);
-	currentMethod->Add(new OpField(args[0], args[1], args[2], declClassName, name));
+	name = args[3].mid(lastIndex + 1);
+	Class* declClass = FindClassByName(declClassName);
+	declClass->Add(new ::Field(args[0], args[1], args[2], declClassName, name));
 }
 
 void Parser::Getfield()
@@ -501,4 +515,11 @@ void Parser::Setfield()
 	if (currentMethod == nullptr)
 		Exit("setfield: must be in method");
 	currentMethod->Add(new OpSetfield(args[0]));
+}
+
+void Parser::This()
+{
+	if (currentMethod == nullptr)
+		Exit("this: must be in method");
+	currentMethod->Add(new OpThis);
 }

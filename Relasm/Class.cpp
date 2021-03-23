@@ -20,6 +20,14 @@ QByteArray Class::Compile()
 			ds << (quint8)compiledParameter.at(i);
 		}
 	}
+	for (auto& item : fields)
+	{
+		QByteArray compiledParameter = item->Compile();
+		for (int i = 0; i < compiledParameter.size(); ++i)
+		{
+			ds << (quint8)compiledParameter.at(i);
+		}
+	}
 
 	return code;
 }
@@ -27,6 +35,11 @@ QByteArray Class::Compile()
 void Class::Add(Method* method)
 {
 	methods.push_back(method);
+}
+
+void Class::Add(Field* field)
+{
+	fields.push_back(field);
 }
 
 QString Class::GetName() const

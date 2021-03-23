@@ -1,14 +1,14 @@
 #pragma once
-#include "OpBase.h"
 #include "AccessModifier.h"
 #include "IsStatic.h"
+#include <QtCore>
 
-class OpField : public OpBase
+class Field
 {
 public:
-	OpField(const QString& accessModifier, const QString& isStatic, const QString& dataType, const QString& declClassName, const QString& name)
+	Field(const QString& accessModifier, const QString& isStatic, const QString& dataType, const QString& declClassName, const QString& name)
 	:accessModifier(flagAccessModifier[accessModifier]), isStatic(flagStatic[isStatic]), dataType(dataType), declClassName(declClassName), name(name){}
-	QByteArray Compile() override;
+	QByteArray Compile();
 
 private:
 	static inline quint8 byteOpCode = 30;

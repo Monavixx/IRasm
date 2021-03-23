@@ -131,13 +131,16 @@
     <ClCompile Include="OpSetpd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OpField.cpp">
+    <ClCompile Include="Field.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OpGetfield.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OpSetfield.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpThis.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -259,14 +262,17 @@
     <ClInclude Include="OpSetpd.h">
       <Filter>Header Files\OpCodes</Filter>
     </ClInclude>
-    <ClInclude Include="OpField.h">
-      <Filter>Header Files\OpCodes</Filter>
-    </ClInclude>
     <ClInclude Include="OpGetfield.h">
       <Filter>Header Files\OpCodes</Filter>
     </ClInclude>
     <ClInclude Include="OpSetfield.h">
       <Filter>Header Files\OpCodes</Filter>
+    </ClInclude>
+    <ClInclude Include="OpThis.h">
+      <Filter>Header Files\OpCodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Field.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
