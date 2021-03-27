@@ -24,7 +24,7 @@ void Compiler::Start()
 
 void Compiler::Parse()
 {
-	Parser parser(relasmFile.readAll());
+	Parser parser(relasmFile.readAll(), QFileInfo(relasmFile).path());
 	classes = parser.Parse();
 }
 

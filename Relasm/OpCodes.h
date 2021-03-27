@@ -28,3 +28,4 @@
 #include "OpGetfield.h"
 #include "OpSetfield.h"
 #include "OpThis.h"
+#include "OpEqual.h"

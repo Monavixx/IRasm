@@ -118,6 +118,7 @@
     <ClCompile Include="OpDiv.cpp" />
     <ClCompile Include="OpDup.cpp" />
     <ClCompile Include="Field.cpp" />
+    <ClCompile Include="OpEqual.cpp" />
     <ClCompile Include="OpGc.cpp" />
     <ClCompile Include="OpGet.cpp" />
     <ClCompile Include="OpGetarr.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="OpDiv.h" />
     <ClInclude Include="OpDup.h" />
     <ClInclude Include="Field.h" />
+    <ClInclude Include="OpEqual.h" />
     <ClInclude Include="OpGc.h" />
     <ClInclude Include="OpGet.h" />
     <ClInclude Include="OpGetarr.h" />

@@ -9,7 +9,7 @@
 class Parser
 {
 public:
-	Parser(const QString& code);
+	Parser(const QString& code, const QString& pathToFile);
 	QList<Class*> Parse();
 	QList<Instruction> StringListToInstruction(const QStringList& lineOfCode);
 	void ExecuteAllCode(const QList<Instruction>& instructions);
@@ -54,6 +54,7 @@ public:
 	void Getfield();
 	void Setfield();
 	void This();
+	void Equal();
 private:
 	Method* currentMethod = nullptr;
 	QStringList args;
@@ -61,6 +62,7 @@ private:
 	static void ProccesCode(QStringList& code);
 
 	QString allCode;
+	QString pathToFile;
 	QMap<QString, std::function<void()>> opCodes =
 	{
 		{"mclass", std::bind(&Parser::CreateMainClass, this)},
@@ -96,7 +98,8 @@ private:
 		{"field", std::bind(&Parser::Field, this)},
 		{"getfield", std::bind(&Parser::Getfield, this)},
 		{"setfield", std::bind(&Parser::Setfield, this)},
-		{"this", std::bind(&Parser::This, this)}
+		{"this", std::bind(&Parser::This, this)},
+		{"equal", std::bind(&Parser::Equal, this)}
 	};
 	QList<Class*> classes;
 };

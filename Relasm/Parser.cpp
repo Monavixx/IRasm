@@ -1,6 +1,6 @@
 #include "Parser.h"
 
-Parser::Parser(const QString& code) : allCode(code)
+Parser::Parser(const QString& code, const QString& pathToFile) : allCode(code), pathToFile(pathToFile)
 {
 }
 
@@ -480,13 +480,13 @@ void Parser::Import()
 {
 	if (currentMethod != nullptr)
 		Exit("import: cannot be in method");
-	QString moduleFilename = args[0];
+	QString moduleFilename = pathToFile + "/" + args[0];
 	QFile moduleFile(moduleFilename);
 	if (!moduleFile.open(QIODevice::ReadOnly))
 	{
 		Exit("module " + moduleFilename + " not exists");
 	}
-	Parser moduleParser(moduleFile.readAll());
+	Parser moduleParser(moduleFile.readAll(), QFileInfo(moduleFile).path());
 	classes += moduleParser.Parse();
 }
 
@@ -522,4 +522,11 @@ void Parser::This()
 	if (currentMethod == nullptr)
 		Exit("this: must be in method");
 	currentMethod->Add(new OpThis);
+}
+
+void Parser::Equal()
+{
+	if (currentMethod == nullptr)
+		Exit("equal: must be in method");
+	currentMethod->Add(new OpEqual);
 }

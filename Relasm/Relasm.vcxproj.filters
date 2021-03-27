@@ -143,6 +143,9 @@
     <ClCompile Include="OpThis.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OpEqual.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
@@ -272,6 +275,9 @@
       <Filter>Header Files\OpCodes</Filter>
     </ClInclude>
     <ClInclude Include="Field.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpEqual.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
