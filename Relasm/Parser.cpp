@@ -41,7 +41,7 @@ void Parser::ExecuteAllCode(const QList<Instruction>& instructions)
 	for (int i = 0; i < instructions.size(); ++i)
 	{
 		QString instructionName = instructions[i].name;
-		if (instructionName[0] == '\t ') continue;
+        if (instructionName[0] == '\t' || instructionName[0] == ' ') continue;
 		bool isOpenQuate = false;
 		int amountOpenBraces = 0;
 		QString currentArg;
