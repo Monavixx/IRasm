@@ -54,7 +54,11 @@ public:
 	void Getfield();
 	void Setfield();
 	void This();
-	void Equal();
+	void Ce();
+	void Cl();
+	void Cb();
+	void Cle();
+	void Cbe();
 private:
 	Method* currentMethod = nullptr;
 	QStringList args;
@@ -99,7 +103,11 @@ private:
 		{"getfield", std::bind(&Parser::Getfield, this)},
 		{"setfield", std::bind(&Parser::Setfield, this)},
 		{"this", std::bind(&Parser::This, this)},
-		{"equal", std::bind(&Parser::Equal, this)}
+		{"ce", std::bind(&Parser::Ce, this)},
+		{"cl", std::bind(&Parser::Cl, this)},
+		{"cb", std::bind(&Parser::Cb, this)},
+		{"cle", std::bind(&Parser::Cle, this)},
+		{"cbe", std::bind(&Parser::Cbe, this)}
 	};
 	QList<Class*> classes;
 };

@@ -524,9 +524,37 @@ void Parser::This()
 	currentMethod->Add(new OpThis);
 }
 
-void Parser::Equal()
+void Parser::Ce()
 {
 	if (currentMethod == nullptr)
-		Exit("equal: must be in method");
-	currentMethod->Add(new OpEqual);
+		Exit("ce: must be in method");
+	currentMethod->Add(new OpCe);
+}
+
+void Parser::Cl()
+{
+	if (currentMethod == nullptr)
+		Exit("cl: must be in method");
+	currentMethod->Add(new OpCl);
+}
+
+void Parser::Cb()
+{
+	if (currentMethod == nullptr)
+		Exit("cb: must be in method");
+	currentMethod->Add(new OpCb);
+}
+
+void Parser::Cle()
+{
+	if (currentMethod == nullptr)
+		Exit("cle: must be in method");
+	currentMethod->Add(new OpCle);
+}
+
+void Parser::Cbe()
+{
+	if (currentMethod == nullptr)
+		Exit("cbe: must be in method");
+	currentMethod->Add(new OpCbe);
 }

@@ -1,6 +1,6 @@
-#include "OpEqual.h"
+#include "OpCl.h"
 
-QByteArray OpEqual::Compile()
+QByteArray OpCl::Compile()
 {
 	QByteArray code;
 	QDataStream ds(&code, QIODevice::WriteOnly);

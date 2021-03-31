@@ -1,13 +1,13 @@
 #pragma once
 #include "OpBase.h"
 
-class OpEqual : public OpBase
+class OpCl : public OpBase
 {
 public:
-	OpEqual() {}
+	OpCl() {}
 	QByteArray Compile() override;
 
 private:
-	static inline quint8 byteOpCode = 34;
+	static inline quint8 byteOpCode = 35;
 };
 

@@ -16,7 +16,7 @@ void Compiler::Start()
 		Exit("relasm file don't open");
 	}
 
-	ds << version;
+	ds << (int)version;
 
 	Parse();
 	Compile();
