@@ -17,10 +17,14 @@ SOURCES += \
     ../OpBase.cpp \
     ../OpCallMethod.cpp \
     ../OpCast.cpp \
+    ../OpCb.cpp \
+    ../OpCbe.cpp \
+    ../OpCe.cpp \
+    ../OpCl.cpp \
+    ../OpCle.cpp \
     ../OpDeref.cpp \
     ../OpDiv.cpp \
     ../OpDup.cpp \
-    ../OpEqual.cpp \
     ../OpGc.cpp \
     ../OpGet.cpp \
     ../OpGetarr.cpp \
@@ -70,11 +74,15 @@ HEADERS += \
     ../OpBase.h \
     ../OpCallMethod.h \
     ../OpCast.h \
+    ../OpCb.h \
+    ../OpCbe.h \
+    ../OpCe.h \
+    ../OpCl.h \
+    ../OpCle.h \
     ../OpCodes.h \
     ../OpDeref.h \
     ../OpDiv.h \
     ../OpDup.h \
-    ../OpEqual.h \
     ../OpGc.h \
     ../OpGet.h \
     ../OpGetarr.h \
