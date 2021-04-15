@@ -5,7 +5,7 @@
 class OpLocal : public OpBase
 {
 public:
-	OpLocal(const QString& id, const QString& dataType, Method* method) : id(method->currentId), dataType(dataType)
+	OpLocal(const QString& id, const QString& namespaceName, const QString& dataType, Method* method) : id(method->currentId), dataType(dataType), namespaceName(namespaceName)
 	{
 		this->method = method;
 		method->names[id] = method->currentId;
@@ -15,6 +15,7 @@ public:
 
 private:
 	int id;
+	QString namespaceName;
 	QString dataType;
 	static inline quint8 byteOpCode = 11;
 };

@@ -6,8 +6,8 @@
 class Field
 {
 public:
-	Field(const QString& accessModifier, const QString& isStatic, const QString& dataType, const QString& declClassName, const QString& name)
-	:accessModifier(flagAccessModifier[accessModifier]), isStatic(flagStatic[isStatic]), dataType(dataType), declClassName(declClassName), name(name){}
+	Field(const QString& accessModifier, const QString& isStatic, const QString& dataType, const QString& namespaceName, const QString& declClassName, const QString& name)
+	:accessModifier(flagAccessModifier[accessModifier]), isStatic(flagStatic[isStatic]), dataType(dataType), declClassName(declClassName), name(name), namespaceName(namespaceName){}
 	QByteArray Compile();
 
 private:
@@ -16,6 +16,7 @@ private:
 	AccessModifier accessModifier;
 	bool isStatic;
 	QString dataType;
+	QString namespaceName;
 	QString declClassName;
 	QString name;
 

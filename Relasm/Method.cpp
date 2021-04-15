@@ -1,7 +1,7 @@
 #include "Method.h"
 
-Method::Method(const QString& accessModifier, const QString& isStatic, const QString& dataType, const QString& declClass, const QString& name, const QList<Parameter>& parameters)
-	: accessModifier(flagAccessModifier[accessModifier]), isStatic(flagStatic[isStatic]), dataType(dataType), declClass(declClass), name(name), parameters(parameters)
+Method::Method(const QString& accessModifier, const QString& isStatic, const QString& dataType, const QString& namespaceName, const QString& declClass, const QString& name, const QList<Parameter>& parameters)
+	: accessModifier(flagAccessModifier[accessModifier]), isStatic(flagStatic[isStatic]), dataType(dataType), declClass(declClass), name(name), parameters(parameters), namespaceName(namespaceName)
 {
 	for (auto& item : this->parameters)
 	{
@@ -18,6 +18,7 @@ QByteArray Method::Compile() const
 	ds << byteOpCode;
 	ds << quint8(accessModifier) << quint8(isStatic);
 	ds << dataType;
+	ds << namespaceName;
 	ds << declClass;
 	ds << name;
 	ds << int(parameters.size());

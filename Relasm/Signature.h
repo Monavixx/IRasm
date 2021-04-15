@@ -4,11 +4,13 @@
 
 struct MethodData
 {
-	QString delcClass;
+	QString namespaceName;
+	QString declClass;
 	QString methodName;
 	QList<Parameter> parameters;
 	static MethodData FromString(const QString& methodData)
 	{
+		QString namespaceName;
 		QString declClass;
 		QString methodName;
 		QList<Parameter> parameters;
@@ -24,7 +26,7 @@ struct MethodData
 		if (indexOfStartMethodName == -1)
 			Exit("Error call method");
 
-		declClass = methodData.mid(0, indexOfStartMethodName - 1);
+		QString namespaceAndClass = methodData.mid(0, indexOfStartMethodName - 1);
 		methodName = methodData.mid(indexOfStartMethodName, indexOfParameters - indexOfStartMethodName);
 
 		QString currentParameterDataType;
@@ -34,7 +36,10 @@ struct MethodData
 		{
 			if (stringParameters[i] == ',')
 			{
-				parameters.push_back(Parameter(currentParameterDataType, currentParameterName));
+				size_t indexStartClassName = currentParameterDataType.lastIndexOf('.');
+				QString className = currentParameterDataType.mid(indexStartClassName + 1);
+				QString namespaceName = currentParameterDataType.mid(0, indexStartClassName);
+				parameters.push_back(Parameter(namespaceName, className, currentParameterName));
 				currentParameterDataType.clear();
 				currentParameterName.clear();
 				isProcessName = false;
@@ -53,9 +58,16 @@ struct MethodData
 		}
 		if (!currentParameterName.isEmpty() && !currentParameterDataType.isEmpty())
 		{
-			parameters.push_back(Parameter(currentParameterDataType, currentParameterName));
+			size_t indexStartClassName = currentParameterDataType.lastIndexOf('.');
+			QString className = currentParameterDataType.mid(indexStartClassName + 1);
+			QString namespaceName = currentParameterDataType.mid(0, indexStartClassName);
+			parameters.push_back(Parameter(namespaceName, className, currentParameterName));
 		}
 
-		return MethodData{ declClass, methodName, parameters};
+		size_t indexStartNameClass = namespaceAndClass.lastIndexOf('.');
+		namespaceName = namespaceAndClass.mid(0, indexStartNameClass);
+		declClass = namespaceAndClass.mid(indexStartNameClass+1);
+
+		return MethodData{ namespaceName, declClass, methodName, parameters};
 	}
 };

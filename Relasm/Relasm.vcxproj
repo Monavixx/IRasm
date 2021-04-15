@@ -53,6 +53,9 @@
       <EnableModules>true</EnableModules>
       <AdditionalOptions>/MP6 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <Link>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -63,7 +66,15 @@
     <ClCompile>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalOptions>/MP6 %(AdditionalOptions)</AdditionalOptions>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
+    <Link>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
+    </Link>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>msvc2019_64</QtInstall>
@@ -110,6 +121,7 @@
     <ClCompile Include="Exit.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Method.cpp" />
+    <ClCompile Include="Namespace.cpp" />
     <ClCompile Include="OpAdd.cpp" />
     <ClCompile Include="OpBase.cpp" />
     <ClCompile Include="OpCallMethod.cpp" />
@@ -158,6 +170,7 @@
     <ClInclude Include="Instruction.h" />
     <ClInclude Include="IsStatic.h" />
     <ClInclude Include="Method.h" />
+    <ClInclude Include="Namespace.h" />
     <ClInclude Include="OpAdd.h" />
     <ClInclude Include="OpBase.h" />
     <ClInclude Include="OpCallMethod.h" />

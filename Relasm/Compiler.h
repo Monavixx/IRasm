@@ -1,6 +1,6 @@
 #pragma once
 #include <QtCore>
-#include "Class.h"
+#include "Namespace.h"
 #include "OpCodes.h"
 #include "ConsoleTextStream.h"
 #include "Exit.h"
@@ -18,9 +18,9 @@ private:
 	QStringList arguments;
 	QFile executebleFile;
 	QDataStream ds;
-	QList<Class*> classes;
+	QList<Namespace*> namespaces;
 	QFile relasmFile;
 
-	const int version = 1;
+	const int version = 2;
 };
 

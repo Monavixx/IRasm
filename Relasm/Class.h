@@ -6,12 +6,13 @@
 class Class
 {
 public:
-	Class(const QString& name, bool isMainClass = false);
+	Class(const QString& namespaceName, const QString& name, bool isMainClass = false);
 	QByteArray Compile();
 	void Add(Method* method);
 	void Add(Field* field);
 	QString GetName() const;
 private:
+	QString namespaceName;
 	QString name;
 	bool isMainClass;
 	QList<Method*> methods;

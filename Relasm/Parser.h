@@ -1,6 +1,6 @@
 #pragma once
 #include <QtCore>
-#include "Class.h"
+#include "Namespace.h"
 #include "Exit.h"
 #include "Signature.h"
 #include "Instruction.h"
@@ -10,15 +10,21 @@ class Parser
 {
 public:
 	Parser(const QString& code, const QString& pathToFile);
-	QList<Class*> Parse();
+	QList<Namespace*> Parse();
 	QList<Instruction> StringListToInstruction(const QStringList& lineOfCode);
 	void ExecuteAllCode(const QList<Instruction>& instructions);
 	void ExecuteMethod(const QList<Instruction>& instructions);
 	QStringList StringToSignature(const QString& strSignature);
 
-
-	Class* FindClassByName(const QString& name);
-
+	Namespace* GetNamespace(const QString& name)
+	{
+		auto classIterator = std::find_if(namespaces.begin(), namespaces.end(), [&](Namespace* _namespace) {
+			return _namespace->GetName() == name;
+			});
+		if (classIterator == namespaces.end())
+			return nullptr;
+		return *classIterator;
+	}
 
 	void CreateMainClass();
 	void CreateMethod();
@@ -59,6 +65,7 @@ public:
 	void Cb();
 	void Cle();
 	void Cbe();
+	void CreateNamespace();
 private:
 	Method* currentMethod = nullptr;
 	QStringList args;
@@ -107,8 +114,9 @@ private:
 		{"cl", std::bind(&Parser::Cl, this)},
 		{"cb", std::bind(&Parser::Cb, this)},
 		{"cle", std::bind(&Parser::Cle, this)},
-		{"cbe", std::bind(&Parser::Cbe, this)}
+		{"cbe", std::bind(&Parser::Cbe, this)},
+		{"namespace", std::bind(&Parser::CreateNamespace, this)}
 	};
-	QList<Class*> classes;
+	QList<Namespace*> namespaces;
 };
 

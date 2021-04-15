@@ -4,7 +4,7 @@ Parser::Parser(const QString& code, const QString& pathToFile) : allCode(code), 
 {
 }
 
-QList<Class*> Parser::Parse()
+QList<Namespace*> Parser::Parse()
 {
 	QStringList code = allCode.split('\n');
 	ProccesCode(code);
@@ -13,7 +13,7 @@ QList<Class*> Parser::Parse()
 
 	ExecuteAllCode(instructions);
 
-	return classes;
+	return namespaces;
 }
 
 QList<Instruction> Parser::StringListToInstruction(const QStringList& lineOfCode)
@@ -158,6 +158,7 @@ void Parser::ExecuteMethod(const QList<Instruction>& instructions)
 
 QStringList Parser::StringToSignature(const QString& strSignature)
 {
+	QString namespaceName;
 	QString className;
 	QString methodName;
 	QStringList parameters;
@@ -173,7 +174,10 @@ QStringList Parser::StringToSignature(const QString& strSignature)
 	if (indexOfStartMethodName == -1)
 		Exit("Error call method");
 
-	className = strSignature.mid(0, indexOfStartMethodName - 1);
+	QString namespaceAndClassName = strSignature.mid(0, indexOfStartMethodName - 1);
+	size_t indexStartClassName = namespaceAndClassName.lastIndexOf('.');
+	namespaceName = namespaceAndClassName.mid(0, indexStartClassName);
+	className = namespaceAndClassName.mid(indexStartClassName + 1);
 	methodName = strSignature.mid(indexOfStartMethodName, indexOfParameters - indexOfStartMethodName);
 
 	QString currentParameter;
@@ -194,7 +198,7 @@ QStringList Parser::StringToSignature(const QString& strSignature)
 		parameters.push_back(currentParameter);
 	}
 
-	return QStringList{ className, methodName } + parameters;
+	return QStringList{ namespaceName, className, methodName } + parameters;
 }
 
 void Parser::ProccesCode(QStringList& code)
@@ -203,7 +207,7 @@ void Parser::ProccesCode(QStringList& code)
 	for (auto& item : code)
 	{
 		bool isPartMethod = item[0] == "\t" || item[0] == " ";
-		item.replace(QRegExp("[ \f\t\v\u00A0]+"), " ");
+		item.replace(QRegExp("[ \t]+"), " ");
 		item.remove('\n');
 		item.remove('\r');
 		if (isPartMethod)
@@ -231,22 +235,18 @@ void Parser::ProccesCode(QStringList& code)
 	code.removeAll("\t");
 }
 
-Class* Parser::FindClassByName(const QString& name)
-{
-	auto classIterator = std::find_if(classes.begin(), classes.end(), [&](Class* _class) {
-		return _class->GetName() == name;
-		});
-	if (classIterator == classes.end())
-		return nullptr;
-	return *classIterator;
-}
 
 void Parser::CreateMainClass()
 {
 	if(currentMethod != nullptr)
 		Exit("mclass: must be out method");
-	Class* mainClass = new Class(args[0], true);
-	classes.push_back(mainClass);
+	QString className, namespaceName;
+	size_t indexStartClassName = args[0].lastIndexOf('.');
+	className = args[0].mid(indexStartClassName + 1);
+	namespaceName = args[0].mid(0, indexStartClassName);
+	Namespace* declNamespace = GetNamespace(namespaceName);
+	Class* mainClass = new Class(namespaceName, className, true);
+	declNamespace->AddClass(mainClass);
 }
 
 void Parser::CreateMethod()
@@ -255,15 +255,19 @@ void Parser::CreateMethod()
 		Exit("method: must be out method");
 	QString strSignature = args[3];
 	MethodData signature = MethodData::FromString(strSignature);
-	QString declClassName = signature.delcClass;
+	QString namespaceName = signature.namespaceName;
+	QString declClassName = signature.declClass;
 	QString methodName = signature.methodName;
 	QList<Parameter> parameters = signature.parameters;
 
-	Method* creatableMethod = new Method(args[0], args[1], args[2], declClassName, methodName, parameters);
-
-	Class* declClass = FindClassByName(declClassName);
+	Namespace* declNamespace = GetNamespace(namespaceName);
+	if (declNamespace == nullptr)
+		Exit("method: namespace not found!");
+	Class* declClass = declNamespace->GetClass(declClassName);
 	if (declClass == nullptr)
-		Exit("method: decl class not found!");
+		Exit("method: class not found!");
+
+	Method* creatableMethod = new Method(args[0], args[1], args[2], namespaceName, declClassName, methodName, parameters);
 
 	declClass->Add(creatableMethod);
 	currentMethod = creatableMethod;
@@ -283,9 +287,36 @@ void Parser::CallMethod()
 	if (currentMethod == nullptr)
 		Exit("callm: must be in method");
 
-	QString strSignature = args[1];
-	QStringList signature = StringToSignature(strSignature);
-	currentMethod->Add(new OpCallMethod(args[0], signature[0], signature[1], signature.mid(2)));
+	QString namespaceName, className, methodName;
+	QList<Parameter> parameters;
+
+	args[1] = "Relax.Console.Print(Relax.String)";
+	QStringList splittedString = args[1].split('(');
+	QString methodPath = splittedString[0], parametersString = splittedString[1].mid(0, splittedString[1].size() - 1);
+	//method name
+	size_t indexStartMethodName = methodPath.lastIndexOf('.');
+	methodName = methodPath.mid(indexStartMethodName + 1);
+
+	//class name
+	QString namespaceAndClass = methodPath.mid(0, indexStartMethodName);
+	size_t indexStartClassName = namespaceAndClass.lastIndexOf('.');
+	className = namespaceAndClass.mid(indexStartClassName + 1);
+
+	//namespace
+	namespaceName = namespaceAndClass.mid(0, indexStartClassName);
+
+	//parameters
+	QStringList parametersList = parametersString.split(',');
+	for (auto& item : parametersList)
+	{
+		Parameter param;
+		size_t paramindexStartClassName = item.lastIndexOf('.');
+		param.SetDataType(item.mid(paramindexStartClassName + 1));
+		param.SetNamespaceName(item.mid(0, paramindexStartClassName));
+		parameters.push_back(param);
+	}
+
+	currentMethod->Add(new OpCallMethod(args[0], namespaceName, className, methodName, parameters));
 }
 
 void Parser::New()
@@ -293,23 +324,49 @@ void Parser::New()
 	if (currentMethod == nullptr)
 		Exit("new: must be in method");
 
-	QString className, strParameters, strSignature = args[0];
+	QString namespaceName, className, strParameters, strSignature = args[0];
 
 	QStringList splittedSignature = strSignature.split('(');
-	className = splittedSignature[0];
-	strParameters = splittedSignature[1].mid(0, splittedSignature[1].size()-1);
-	QStringList parameters = strParameters.split(',');
+	QString namespaceAndClass = splittedSignature[0];
+
+	size_t indexStartClassName = namespaceAndClass.lastIndexOf('.');
+	namespaceName = namespaceAndClass.mid(0, indexStartClassName);
+	className = namespaceAndClass.mid(indexStartClassName + 1);
+
+	strParameters = splittedSignature[1].mid(0, splittedSignature[1].size() - 1);
+
+	QStringList parametersStrList;
+	if (strParameters.contains(','))
+		parametersStrList = strParameters.split(',');
+	else if(!strParameters.isEmpty())
+		parametersStrList = QStringList{ strParameters };
 
 
-	currentMethod->Add(new OpNew(className, parameters));
+	QList<Parameter> parameters;
+	for (auto& item : parametersStrList)
+	{
+		Parameter param;
+		size_t paramindexStartClassName = item.lastIndexOf('.');
+		param.SetDataType(item.mid(paramindexStartClassName + 1));
+		param.SetNamespaceName(item.mid(0, paramindexStartClassName));
+		parameters.push_back(param);
+	}
+
+
+	currentMethod->Add(new OpNew(namespaceName, className, parameters));
 }
 
 void Parser::CreateClass()
 {
 	if (currentMethod != nullptr)
-		Exit("class: must be out method");
-	Class* mainClass = new Class(args[0]);
-	classes.push_back(mainClass);
+		Exit("mclass: must be out method");
+	QString className, namespaceName;
+	size_t indexStartClassName = args[0].lastIndexOf('.');
+	className = args[0].mid(indexStartClassName + 1);
+	namespaceName = args[0].mid(0, indexStartClassName);
+	Namespace* declNamespace = GetNamespace(namespaceName);
+	Class* mainClass = new Class(namespaceName, className);
+	declNamespace->AddClass(mainClass);
 }
 
 void Parser::Get()
@@ -330,7 +387,11 @@ void Parser::Local()
 {
 	if (currentMethod == nullptr)
 		Exit("local: must be in method");
-	currentMethod->Add(new OpLocal(args[0], args[1], currentMethod));
+
+	size_t indexStartClassName = args[1].lastIndexOf('.');
+	QString className = args[1].mid(indexStartClassName + 1);
+	QString namespaceName = args[1].mid(0, indexStartClassName);
+	currentMethod->Add(new OpLocal(args[0], namespaceName, className, currentMethod));
 }
 
 void Parser::Gc()
@@ -487,7 +548,7 @@ void Parser::Import()
 		Exit("module " + moduleFilename + " not exists");
 	}
 	Parser moduleParser(moduleFile.readAll(), QFileInfo(moduleFile).path());
-	classes += moduleParser.Parse();
+	namespaces += moduleParser.Parse();
 }
 
 void Parser::Field()
@@ -495,12 +556,23 @@ void Parser::Field()
 	if (currentMethod != nullptr)
 		Exit("field: cannot be in method");
 
-	QString declClassName, name;
+	QString namespaceName, declClassName, name;
 	size_t lastIndex = args[3].lastIndexOf(".");
-	declClassName = args[3].mid(0, lastIndex);
+	QString namespaceAndClass = args[3].mid(0, lastIndex);
+
+	size_t indexStartClassName = namespaceAndClass.lastIndexOf('.');
+	namespaceName = namespaceAndClass.mid(0, indexStartClassName);
+	declClassName = namespaceAndClass.mid(indexStartClassName + 1);
+
 	name = args[3].mid(lastIndex + 1);
-	Class* declClass = FindClassByName(declClassName);
-	declClass->Add(new ::Field(args[0], args[1], args[2], declClassName, name));
+
+	
+	size_t indexStartDataType = args[2].lastIndexOf('.');
+	QString dataTypeClassName = args[2].mid(indexStartDataType);
+
+	Namespace* declNamespace = GetNamespace(namespaceName);
+	Class* declClass = declNamespace->GetClass(declClassName);
+	declClass->Add(new ::Field(args[0], args[1], dataTypeClassName, namespaceName, declClassName, name));
 }
 
 void Parser::Getfield()
@@ -557,4 +629,11 @@ void Parser::Cbe()
 	if (currentMethod == nullptr)
 		Exit("cbe: must be in method");
 	currentMethod->Add(new OpCbe);
+}
+
+void Parser::CreateNamespace()
+{
+	if (currentMethod != nullptr)
+		Exit("namespace: must be out method");
+	namespaces.push_back(new Namespace(args[0]));
 }

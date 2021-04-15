@@ -9,7 +9,7 @@ class Method
 {
 public:
 	Method() {}
-	Method(const QString& accessModifier, const QString& isStatic, const QString& dataType, const QString& declClass, const QString& name, const QList<Parameter>& parameters);
+	Method(const QString& accessModifier, const QString& isStatic, const QString& dataType, const QString& namespaceName, const QString& declClass, const QString& name, const QList<Parameter>& parameters);
 	QByteArray Compile() const;
 	void Add(OpBase* opCode);
 	void AddTag(const QString& nameTag);
@@ -20,6 +20,7 @@ private:
 	AccessModifier accessModifier;
 	IsStatic isStatic;
 	QString dataType;
+	QString namespaceName;
 	QString declClass;
 	QString name;
 	QList<Parameter> parameters;

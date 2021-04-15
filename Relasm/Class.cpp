@@ -1,6 +1,6 @@
 #include "Class.h"
 
-Class::Class(const QString& name, bool isMainClass) : name(name), isMainClass(isMainClass)
+Class::Class(const QString& namespaceName, const QString& name, bool isMainClass) : name(name), isMainClass(isMainClass), namespaceName(namespaceName)
 {
 }
 
@@ -10,7 +10,7 @@ QByteArray Class::Compile()
 	QDataStream ds(&code, QIODevice::WriteOnly);
 
 	quint8 currentByteOpCode = (isMainClass) ? (byteMainClassOpCode) : (byteOpCode);
-	ds << currentByteOpCode << name;
+	ds << currentByteOpCode << namespaceName << name;
 
 	for (auto& item : methods)
 	{

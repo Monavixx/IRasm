@@ -2,7 +2,9 @@
 
 OpPushStr::OpPushStr(const QString& data) : data(data)
 {
+    this->data.replace("\\\\", "\\");
     this->data.replace("\\n", "\n");
+    this->data.replace("\\t", "\t");
 }
 
 QByteArray OpPushStr::Compile()

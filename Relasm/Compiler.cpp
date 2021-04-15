@@ -25,12 +25,12 @@ void Compiler::Start()
 void Compiler::Parse()
 {
 	Parser parser(relasmFile.readAll(), QFileInfo(relasmFile).path());
-	classes = parser.Parse();
+	namespaces = parser.Parse();
 }
 
 void Compiler::Compile()
 {
-	for (auto& item : classes)
+	for (auto& item : namespaces)
 	{
 		QByteArray compiledClass = item->Compile();
 		for (int i = 0; i < compiledClass.size(); ++i)

@@ -158,6 +158,9 @@
     <ClCompile Include="OpCl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Namespace.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h">
@@ -303,6 +306,9 @@
     </ClInclude>
     <ClInclude Include="OpCl.h">
       <Filter>Header Files\OpCodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Namespace.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
