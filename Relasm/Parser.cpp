@@ -565,7 +565,6 @@ void Parser::Field()
 	declClassName = namespaceAndClass.mid(indexStartClassName + 1);
 
 	name = args[3].mid(lastIndex + 1);
-
 	
 	size_t indexStartDataType = args[2].lastIndexOf('.');
 	QString dataTypeClassName = args[2].mid(indexStartDataType);
@@ -579,14 +578,42 @@ void Parser::Getfield()
 {
 	if (currentMethod == nullptr)
 		Exit("getfield: must be in method");
-	currentMethod->Add(new OpGetfield(args[0]));
+	if (args[0] == "static")
+	{
+		size_t lastIndex = args[1].lastIndexOf(".");
+		QString namespaceAndClass = args[1].mid(0, lastIndex);
+
+		size_t indexStartClassName = namespaceAndClass.lastIndexOf('.');
+		QString namespaceName = namespaceAndClass.mid(0, indexStartClassName);
+		QString className = namespaceAndClass.mid(indexStartClassName + 1);
+
+		QString name = args[1].mid(lastIndex + 1);
+
+		currentMethod->Add(new OpGetfield(args[0], namespaceName, className, name));
+	}
+	else
+		currentMethod->Add(new OpGetfield(args[0], args[1]));
 }
 
 void Parser::Setfield()
 {
 	if (currentMethod == nullptr)
 		Exit("setfield: must be in method");
-	currentMethod->Add(new OpSetfield(args[0]));
+	if (args[0] == "static")
+	{
+		size_t lastIndex = args[1].lastIndexOf(".");
+		QString namespaceAndClass = args[1].mid(0, lastIndex);
+
+		size_t indexStartClassName = namespaceAndClass.lastIndexOf('.');
+		QString namespaceName = namespaceAndClass.mid(0, indexStartClassName);
+		QString className = namespaceAndClass.mid(indexStartClassName + 1);
+
+		QString name = args[1].mid(lastIndex + 1);
+
+		currentMethod->Add(new OpSetfield(args[0], namespaceName, className, name));
+	}
+	else
+		currentMethod->Add(new OpSetfield(args[0], args[1]));
 }
 
 void Parser::This()
