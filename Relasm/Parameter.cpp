@@ -1,6 +1,6 @@
 #include "Parameter.h"
 
-Parameter::Parameter(const QString& namespaceName, const QString& dataType, const QString& name) : dataType(dataType), name(name)
+Parameter::Parameter(const QString& namespaceName, const QString& dataType, const QString& name) : namespaceName(namespaceName), dataType(dataType), name(name)
 {
 }
 

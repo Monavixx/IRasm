@@ -98,8 +98,7 @@ void Parser::ExecuteAllCode(const QList<Instruction>& instructions)
 				}
 			}
 			args.push_back(code.mid(0, code.size()-1));
-			//if(i < instructions.size() - 1)
-				--i;
+			--i;
 		}
 		
 		if (opCodes.contains(instructionName))
@@ -290,7 +289,6 @@ void Parser::CallMethod()
 	QString namespaceName, className, methodName;
 	QList<Parameter> parameters;
 
-	args[1] = "Relax.Console.Print(Relax.String)";
 	QStringList splittedString = args[1].split('(');
 	QString methodPath = splittedString[0], parametersString = splittedString[1].mid(0, splittedString[1].size() - 1);
 	//method name
@@ -306,7 +304,10 @@ void Parser::CallMethod()
 	namespaceName = namespaceAndClass.mid(0, indexStartClassName);
 
 	//parameters
-	QStringList parametersList = parametersString.split(',');
+	QStringList parametersList;
+	if(!parametersString.isEmpty())
+		parametersList = parametersString.split(',');
+
 	for (auto& item : parametersList)
 	{
 		Parameter param;

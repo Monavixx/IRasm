@@ -24,10 +24,11 @@ QByteArray Method::Compile() const
 	ds << int(parameters.size());
 	for (auto& item : parameters)
 	{
-		QByteArray compiledParameter = item.Compile();
-		for (int i = 0; i < compiledParameter.size(); ++i)
+		//ds << item.Compile();
+		QByteArray compiledOpCode = item.Compile();
+		for (int i = 0; i < compiledOpCode.size(); ++i)
 		{
-			ds << (quint8)compiledParameter.at(i);
+			ds << (quint8)compiledOpCode.at(i);
 		}
 	}
 

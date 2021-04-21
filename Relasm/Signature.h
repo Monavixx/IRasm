@@ -15,7 +15,7 @@ struct MethodData
 		QString methodName;
 		QList<Parameter> parameters;
 
-		int indexOfParameters = methodData.indexOf("(");
+		size_t indexOfParameters = methodData.indexOf('(');
 
 		if (indexOfParameters == -1)
 			Exit("Error call method");
