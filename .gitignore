@@ -1,3 +1,7 @@
 .vs/
 x64/Debug/
-Relasm/x64/
+RVM/x64/
+*.vcxproj.user
+.vscode/
+bin/
+Emake

@@ -1,0 +1,16 @@
+assembly
+{
+    version: "0.1";
+    name: "test";
+}
+
+include-assembly
+{
+    rvm-console
+}
+
+void main() locals:{}, maxstack:1
+{
+    pstr "hello world";
+    call [rvm-console]Relax.Console(string);
+}
