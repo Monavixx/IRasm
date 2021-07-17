@@ -9,7 +9,7 @@ include-assembly
     rvm-console
 }
 
-void main() locals:{}, maxstack:1
+main() locals:{}, maxstack:1
 {
     pstr "hello world";
     call [rvm-console]Relax.Console(string);
