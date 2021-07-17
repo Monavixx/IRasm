@@ -1,6 +1,6 @@
 #include "lexer.h"
 
-std::vector<Token> Lexer::separation() const noexcept
+std::vector<Token> Lexer::separation() const
 {
     constexpr std::array<char, 6> seps {
         ';',
@@ -17,13 +17,20 @@ std::vector<Token> Lexer::separation() const noexcept
     std::vector<Token> tokens;
     size_t currentLine = 1,
         amountOpenCurlyBraces = 0,
-        amountOpenSquareBraces = 0;
+        amountOpenSquareBraces = 0,
+        lastLineOpenQuote = 1;
     std::string temp;
     bool isOpenQuote = false;
     
     for (size_t i = 0; i < code.size(); ++i) {
+        if (code[i] == '\n') {
+            ++currentLine;
+        }
+
         if (sepsContains(code[i]) && !isOpenQuote) {
-            tokens.emplace_back(move(temp), currentLine);
+            if (!temp.empty()) {
+                tokens.emplace_back(move(temp), currentLine);
+            }
             tokens.emplace_back(std::string{code[i]}, currentLine);
 
             if (code[i] == '[') {
@@ -37,6 +44,14 @@ std::vector<Token> Lexer::separation() const noexcept
             }
             else if (code[i] == '}') {
                 --amountOpenCurlyBraces;
+                if (amountOpenSquareBraces != 0) {
+                    throw expected_character_exception{"expected symbol ']' on line " + std::to_string(currentLine)};
+                }
+            }
+            else if (code[i] == ';') {
+                if (amountOpenSquareBraces != 0) {
+                    throw expected_character_exception{"expected symbol ']' on line " + std::to_string(currentLine)};
+                }
             }
             continue;
         }
@@ -44,15 +59,15 @@ std::vector<Token> Lexer::separation() const noexcept
             if (!temp.empty()) {
                 tokens.emplace_back(move(temp), currentLine);
             }
-            if (code[i] == '\n') {
-                ++currentLine;
-            }
             continue;
         }
         else if (code[i] == '"') {
             isOpenQuote = !isOpenQuote;
             if (isOpenQuote) {
-                tokens.emplace_back(move(temp), currentLine);
+                lastLineOpenQuote = currentLine;
+                if (!temp.empty()) {
+                    tokens.emplace_back(move(temp), currentLine);
+                }
             }
             continue;
         }
@@ -60,10 +75,8 @@ std::vector<Token> Lexer::separation() const noexcept
             temp += code[i];
         }
     }
-
-    for(auto& item : tokens)
-    {
-        std::cout  << '[' << item.numberLine << ']' << item.word << '\n';
+    if (isOpenQuote) {
+        throw expected_character_exception{"expected symbol '\"' on line " + std::to_string(lastLineOpenQuote)};
     }
 
     return tokens;

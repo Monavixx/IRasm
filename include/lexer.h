@@ -6,6 +6,7 @@
 #include <array>
 
 #include "token.h"
+#include "exception/lexer_exception.h"
 
 class Lexer
 {
@@ -13,7 +14,7 @@ public:
     Lexer(auto&& code) noexcept : code{forward<decltype(code)>(code)}
     {
     }
-    std::vector<Token> separation() const noexcept;
+    std::vector<Token> separation() const;
 
 private:
     std::string code;

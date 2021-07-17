@@ -30,10 +30,17 @@ public:
      * @brief Compilation method of the program. The result will be sent to the stream, the ref to which was passed to the constructor
      * 
      */
-    void build() noexcept
+    void build()
     {
         Lexer lexer{move(code)};
-        std::vector<Token> tokens = lexer.separation();
+        std::vector<Token> tokens;
+        try {
+            tokens = lexer.separation();
+        }
+        catch (const all_exception& e) {
+            std::cerr << e.get_message() << '\n';
+        }
+        
         balib::writeStdArray(fout, balib::numToBytes(version));
     }
 
