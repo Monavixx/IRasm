@@ -7,19 +7,37 @@
 
 #include "balib.h"
 
-using rbyte = unsigned char;
-
+/**
+ * @brief the class responsible for compiling the program
+ * @tparam OutputStream the type of stream to which the compiled data will be written
+ */
+template<class OutputStream>
 class Compiler
 {
 public:
-    Compiler(auto&& code, std::ofstream&& fout) noexcept : code{std::forward<decltype(code)>(code)}, fout{std::forward<std::ofstream>(fout)}
+    /**
+     * @brief Construct a new Compiler object
+     * 
+     * @param[in] code(std::string) the code to be compiled
+     * @param fout the stream to which the compiled data will be directed
+     */
+    Compiler(auto&& code, OutputStream& fout) noexcept : code{std::forward<decltype(code)>(code)}, fout{fout}
     {
     }
 
-    void build() noexcept;
+    /**
+     * @brief Compilation method of the program. The result will be sent to the stream, the ref to which was passed to the constructor 
+     * 
+     */
+    void build() noexcept
+    {
+        fout.write((char*)balib::intToBytes(version).data(), 4);
+    }
 
 private:
     std::string code;
-    std::ofstream fout;
+    OutputStream& fout;
+
+    // bytecode version
     constexpr static inline int version = 1;
 };

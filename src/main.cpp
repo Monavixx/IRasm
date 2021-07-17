@@ -11,6 +11,12 @@ namespace bpo = boost::program_options;
 namespace fs = std::filesystem;
 
 
+/**
+ * @brief reads and returns all text from file
+ * 
+ * @param[in] path path to file
+ * @return text from file
+ */
 std::string readFile(fs::path&& path) noexcept
 {
     std::ifstream f(path, std::ios::in | std::ios::binary);
@@ -44,7 +50,7 @@ int main(int argc, char* argv[]) noexcept
         std::string outputFilename = vm.contains("out") ? vm["out"].as<std::string>() : "out.ree";
 
         std::ofstream fout(outputFilename, std::ios::binary);
-        Compiler compiler{std::move(code), std::move(fout)};
+        Compiler compiler{std::move(code), fout};
         compiler.build();
     }
 
