@@ -3,9 +3,9 @@ src {
     src/main.cpp,
     src/compiler.cpp,
     src/balib.cpp,
-    src/lexer.cpp
+    src/lexer.cpp,
+    src/parser.cpp
 }
-objArgs = -Wall;
 libs
 {
     boost_program_options

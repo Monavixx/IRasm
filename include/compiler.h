@@ -7,6 +7,7 @@
 
 #include "balib.h"
 #include "lexer.h"
+#include "parser/parser.h"
 
 /**
  * @brief the class responsible for compiling the program
@@ -40,7 +41,29 @@ public:
         catch (const all_exception& e) {
             std::cerr << e.get_message() << '\n';
         }
-        
+
+        Parser parser(move(tokens));
+        parser.parse();
+
+        for(auto& item : parser.functions)
+        {
+            std::cout << item.name << "\n\t" << item.maxstack << "\n\t";
+            for(auto& item2 : item.locals)
+            {
+                std::cout << item2.name << ':' << item2.dataType << "; ";
+            }
+            for(auto& item2 : item.opcodes)
+            {
+                std::cout << "\n\t" << item2.name << "\n\t\t";
+                for(auto& item3 : item2.tokens)
+                {
+                    std::cout << item3.word << "; ";
+                }
+                std::cout << '\n';
+            }
+            std::cout << '\n';
+        }
+
         balib::writeStdArray(fout, balib::numToBytes(version));
     }
 
