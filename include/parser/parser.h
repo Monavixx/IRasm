@@ -7,6 +7,7 @@
 #include "token.h"
 #include "function.h"
 #include "opcode.h"
+#include "../exception/exception.h"
 
 #include <boost/lexical_cast.hpp>
 

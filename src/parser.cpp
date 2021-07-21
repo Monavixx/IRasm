@@ -11,23 +11,40 @@ void Parser::parse()
                             assembly.name = std::move(tokens[i + 2].word);
                             i += 2;
                         }
-                        if (tokens[i].word == "version") {
+                        else if (tokens[i].word == "version") {
                             assembly.version = std::move(tokens[i + 2].word);
                             i += 2;
                         }
+                        else {
+                            throw unexpected_character_exception{"unexpected character \"" + tokens[i].word + "\" on line " + std::to_string(tokens[i].numberLine)};
+                        }
+                    }
+                    if (tokens.size() == i + 1) {
+                        throw expected_character_exception{"expected character \"}\" on line " + std::to_string(tokens[i].numberLine)};
                     }
                 }
+            }
+            else {
+                throw expected_character_exception{"expected character \"{\" on line " + std::to_string(tokens[i].numberLine)};
             }
         }
         else if (tokens[i].type == Token::Type::INCLUDE_ASSEMBLY) {
             if (tokens[++i].type == Token::Type::OPEN_CURLY_BRACE) {
                 while (tokens[++i].type != Token::Type::CLOSE_CURLY_BRACE) {
                     includeAssembly.push_back(std::move(tokens[i].word));
+
+                    if (tokens.size() == i + 1) {
+                        throw expected_character_exception{"expected character \"}\" on line " + std::to_string(tokens[i].numberLine)};
+                    }
                 }
+            }
+            else {
+                throw expected_character_exception{"expected character \"{\" on line " + std::to_string(tokens[i].numberLine)};
             }
         }
         else if (tokens[i].type == Token::Type::WORD) {
             std::string functionName = tokens[i].word;
+            
             if (tokens[++i].type == Token::Type::LOCALS) {
                 if (tokens[++i].type == Token::Type::COLON) {
                     if (tokens[++i].type == Token::Type::OPEN_CURLY_BRACE) {

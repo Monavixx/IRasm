@@ -45,12 +45,12 @@ std::vector<Token> Lexer::separation() const
             else if (code[i] == '}') {
                 --amountOpenCurlyBraces;
                 if (amountOpenSquareBraces != 0) {
-                    throw expected_character_exception{"expected symbol ']' on line " + std::to_string(currentLine)};
+                    throw expected_character_exception{"expected character \"]\" on line " + std::to_string(currentLine)};
                 }
             }
             else if (code[i] == ';') {
                 if (amountOpenSquareBraces != 0) {
-                    throw expected_character_exception{"expected symbol ']' on line " + std::to_string(currentLine)};
+                    throw expected_character_exception{"expected character \"]\" on line " + std::to_string(currentLine)};
                 }
             }
             continue;

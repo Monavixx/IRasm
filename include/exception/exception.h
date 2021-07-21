@@ -17,3 +17,15 @@ public:
 private:
     std::string msg;
 };
+
+class unexpected_character_exception : public all_exception
+{
+public:
+    using all_exception::all_exception;
+};
+
+class expected_character_exception : public all_exception
+{
+public:
+    using all_exception::all_exception;
+};

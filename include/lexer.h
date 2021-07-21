@@ -6,7 +6,7 @@
 #include <array>
 
 #include "token.h"
-#include "exception/lexer_exception.h"
+#include "exception/exception.h"
 
 class Lexer
 {

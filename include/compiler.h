@@ -43,9 +43,15 @@ public:
         }
 
         Parser parser(move(tokens));
-        parser.parse();
 
-        for(auto& item : parser.functions)
+        try {
+            parser.parse();
+        }
+        catch (const all_exception& e) {
+            std::cerr << e.get_message() << '\n';
+        }
+        // Debug
+        /*for(auto& item : parser.functions)
         {
             std::cout << item.name << "\n\t" << item.maxstack << "\n\t";
             for(auto& item2 : item.locals)
@@ -62,7 +68,7 @@ public:
                 std::cout << '\n';
             }
             std::cout << '\n';
-        }
+        }*/
 
         balib::writeStdArray(fout, balib::numToBytes(version));
     }
