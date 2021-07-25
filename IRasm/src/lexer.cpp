@@ -1,19 +1,23 @@
 #include "lexer.h"
 
-std::vector<Token> Lexer::separation() const
+std::vector<Token> Lexer::separation()
 {
-    constexpr std::array<char, 6> seps {
+    constexpr auto sepsContains = [seps = std::array{
         ';',
         ':',
         '{',
         '}',
         '[',
-        ']'
-    };
-    constexpr auto sepsContains{[seps] (char sep) constexpr {
+        ']',
+        ')',
+        '(',
+        ','}
+    ](char sep) constexpr {
         return std::find(begin(seps), end(seps), sep) != end(seps);
-    }};
-    
+    };
+
+    code.erase(std::remove(code.begin(), code.end(), '\r'), code.end());
+
     std::vector<Token> tokens;
     size_t currentLine = 1,
         amountOpenCurlyBraces = 0,

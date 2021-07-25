@@ -1,7 +1,10 @@
 .vs/
-x64/Debug/
+x64/
 RVM/x64/
 *.vcxproj.user
 .vscode/
 bin/
-Emake
+*.sln
+*.vcxproj
+*.vcxproj.filters
+packages/

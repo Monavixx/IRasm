@@ -5,6 +5,8 @@
 #include <list>
 #include <fstream>
 
+#include <fmt/core.h>
+
 #include "balib.h"
 #include "lexer.h"
 #include "parser/parser.h"
@@ -18,12 +20,12 @@ class Compiler
 {
 public:
     /**
-     * @brief Construct a new Compiler object
+     * @brief constructor accepting source code and output stream
      * 
-     * @param[in] code(std::string) the code to be compiled
-     * @param[in] fout the stream to which the compiled data will be directed
+     * @param code the code to be compiled
+     * @param fout the stream to which the compiled data will be directed
      */
-    Compiler(auto&& code, _OutputStream& fout) noexcept : code{std::forward<decltype(code)>(code)}, fout{fout}
+    Compiler(std::string&& code, _OutputStream& fout) noexcept : code{std::move(code)}, fout{fout}
     {
     }
 
@@ -39,38 +41,43 @@ public:
             tokens = lexer.separation();
         }
         catch (const all_exception& e) {
-            std::cerr << e.get_message() << '\n';
+            fmt::print(stderr, "{}", e.what() + '\n');
         }
 
         Parser parser(move(tokens));
-
         try {
             parser.parse();
         }
         catch (const all_exception& e) {
-            std::cerr << e.get_message() << '\n';
+            fmt::print(stderr, "{}", e.what() + '\n');
         }
+
         // Debug
-        /*for(auto& item : parser.functions)
+        /*for (auto& item : parser.functions)
         {
-            std::cout << item.name << "\n\t" << item.maxstack << "\n\t";
+            print(item.name + "(");
+            for (auto& item2 : item.parameters)
+            {
+                print(item2.dataType + ":" + item2.name + ",");
+            }
+            print(")\n\tmaxstack=" + std::to_string(item.maxstack) + "\n\t");
             for(auto& item2 : item.locals)
             {
-                std::cout << item2.name << ':' << item2.dataType << "; ";
+                print(item2.name + ':' + item2.dataType + "; ");
             }
             for(auto& item2 : item.opcodes)
             {
-                std::cout << "\n\t" << item2.name << "\n\t\t";
+                print("\n\t" + item2.name + "\n\t\t");
                 for(auto& item3 : item2.tokens)
                 {
-                    std::cout << item3.word << "; ";
+                    print(item3.word + "; ");
                 }
-                std::cout << '\n';
+                print("\n");
             }
-            std::cout << '\n';
+            print("\n");
         }*/
 
-        balib::writeStdArray(fout, balib::numToBytes(version));
+        balib::writeNum(fout, version);
     }
 
 private:

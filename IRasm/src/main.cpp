@@ -14,7 +14,7 @@ namespace fs = std::filesystem;
 /**
  * @brief reads and returns all text from file
  * 
- * @param[in] path path to file
+ * @param path path to file
  * @return text from file
  */
 std::string readFile(fs::path&& path) noexcept
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) noexcept
         std::string outputFilename = vm.contains("out") ? vm["out"].as<std::string>() : "out.ree";
 
         std::ofstream fout(outputFilename, std::ios::binary);
-        Compiler compiler{std::move(code), fout};
+        Compiler<std::ofstream> compiler{std::move(code), fout};
         compiler.build();
     }
 

@@ -9,8 +9,8 @@ include-assembly
     rvm-console
 }
 
-main() locals:{} maxstack:1
+main(int:arg, string:kok) locals:{} maxstack:1
 {
-    pstr "hello world"
+    pstr "привет мир!"
     call [rvm-console]Relax.Console(string)
 }
