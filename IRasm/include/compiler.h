@@ -11,11 +11,13 @@
 #include "lexer.h"
 #include "parser/parser.h"
 
+using namespace std::string_literals;
+
 /**
  * @brief the class responsible for compiling the program
  * @tparam _OutputStream the type of stream to which the compiled data will be written
  */
-template<balib::OutputStream _OutputStream>
+template<class _OutputStream>
 class Compiler
 {
 public:
@@ -33,52 +35,7 @@ public:
      * @brief Compilation method of the program. The result will be sent to the stream, the ref to which was passed to the constructor
      * 
      */
-    void build()
-    {
-        Lexer lexer{move(code)};
-        std::vector<Token> tokens;
-        try {
-            tokens = lexer.separation();
-        }
-        catch (const all_exception& e) {
-            fmt::print(stderr, "{}", e.what() + '\n');
-        }
-
-        Parser parser(move(tokens));
-        try {
-            parser.parse();
-        }
-        catch (const all_exception& e) {
-            fmt::print(stderr, "{}", e.what() + '\n');
-        }
-
-        // Debug
-        /*for (auto& item : parser.functions)
-        {
-            print(item.name + "(");
-            for (auto& item2 : item.parameters)
-            {
-                print(item2.dataType + ":" + item2.name + ",");
-            }
-            print(")\n\tmaxstack=" + std::to_string(item.maxstack) + "\n\t");
-            for(auto& item2 : item.locals)
-            {
-                print(item2.name + ':' + item2.dataType + "; ");
-            }
-            for(auto& item2 : item.opcodes)
-            {
-                print("\n\t" + item2.name + "\n\t\t");
-                for(auto& item3 : item2.tokens)
-                {
-                    print(item3.word + "; ");
-                }
-                print("\n");
-            }
-            print("\n");
-        }*/
-
-        balib::writeNum(fout, version);
-    }
+    void build();
 
 private:
     std::string code;
@@ -87,3 +44,28 @@ private:
     // bytecode version
     constexpr static inline int version = 1;
 };
+
+
+
+template<class _OutputStream>
+inline void Compiler<_OutputStream>::build()
+{
+    Lexer lexer{ move(code) };
+    std::vector<Token> tokens;
+    try {
+        tokens = lexer.separation();
+    }
+    catch (const all_exception& e) {
+        fmt::print(stderr, "{}", e.what() + '\n');
+    }
+
+    Parser parser(move(tokens));
+    try {
+        parser.parse();
+    }
+    catch (const all_exception& e) {
+        fmt::print(stderr, "{}", e.what() + '\n');
+    }
+
+    balib::writeNum(fout, version);
+}
