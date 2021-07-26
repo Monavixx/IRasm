@@ -40,8 +40,8 @@ private:
 class unexpected_character_exception : public all_exception
 {
 public:
-    unexpected_character_exception(const std::string& msg)
-        : all_exception{ "unexpected_character_exception: " + msg }
+    unexpected_character_exception(std::string&& msg)
+        : all_exception{ "unexpected_character_exception: "s + move(msg) }
     {
     }
 };
@@ -52,8 +52,17 @@ public:
 class expected_character_exception : public all_exception
 {
 public:
-    expected_character_exception(const std::string& msg)
-        : all_exception{ "expected_character_exception: " + msg }
+    expected_character_exception(std::string&& msg)
+        : all_exception( "expected_character_exception: "s + move(msg) )
+    {
+    }
+};
+
+class syntax_instruction_error_exception : public all_exception
+{
+public:
+    syntax_instruction_error_exception(std::string&& msg)
+        : all_exception("syntax_instruction_error_exception: "s + move(msg))
     {
     }
 };

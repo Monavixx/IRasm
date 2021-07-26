@@ -2,10 +2,12 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include "local.h"
 #include "opcode.h"
 #include "parameter.h"
+#include "balib.h"
 
 
 /**
@@ -15,33 +17,55 @@ class Function
 {
 public:
     /**
-     * @brief a constructor that takes all information about a function
+     * @brief a constructor that takes all information about a function. Also it sets id for parameters and local variables
      * 
      * @param name function name
-     * @param parameters function parameter list
+     * @param parameters function parameter map
      * @param opcodes function instruction list
-     * @param function local variable list
+     * @param locals function local variable map
      * @param maxstack maximum stack size
      */
-    Function(std::string_view name, std::vector<Parameter>&& parameters, std::vector<OpCode>&& opcodes = {}, std::vector<Local>&& locals = {}, size_t maxstack = 0)
+    Function(std::string_view name, std::unordered_map<std::string, Parameter>&& parameters,
+        std::vector<OpCode>&& opcodes, std::unordered_map<std::string, Local>&& locals, size_t maxstack)
         : name{ name }, parameters{ std::move(parameters) }, opcodes{ std::move(opcodes) }, locals{ std::move(locals) }, maxstack{ maxstack }
     {
+        for (size_t i = 0; auto& [name, param] : this->parameters) {
+            param.set_id(i++);
+        }
+        for (size_t i = 0; auto& [name, local] : this->locals) {
+            local.set_id(i++);
+        }
     }
 
-    /*std::vector<OpCode>& get_opcodes() noexcept { return opcodes; }
-    std::vector<OpCode> get_opcodes() const noexcept { return opcodes; }
-    std::vector<Parameter>& get_parameters() noexcept { return parameters; }
-    std::vector<Parameter> get_parameters() const noexcept { return parameters; }
-    std::vector<Local>& get_locals() noexcept { return locals; }
-    std::vector<Local> get_locals() const noexcept { return locals; }
-    std::string& get_name() noexcept { return name; }
-    std::string get_name() const noexcept { return name; }
-    size_t get_maxstack() const noexcept { return maxstack; }*/
+    void build(std::ofstream& outputStream)
+    {
+        balib::writeString(outputStream, name);
+        balib::writeNum(outputStream, parameters.size());
+        for (auto& [name, param] : parameters) {
+            balib::writeString(outputStream, param.get_data_type());
+            balib::writeNum(outputStream, param.get_id());
+        }
+        balib::writeNum(outputStream, locals.size());
+        for (auto& [name, local] : locals) {
+            balib::writeString(outputStream, local.get_data_type());
+            balib::writeNum(outputStream, local.get_id());
+        }
+        balib::writeNum(outputStream, maxstack);
+
+        Buffer opcodesBuffer;
+
+        for (auto& item : opcodes) {
+            item.build(opcodesBuffer, *this);
+        }
+        
+        balib::writeNum(outputStream, opcodesBuffer.size());
+        balib::writeStdArray(outputStream, opcodesBuffer.readAll());
+    }
 
 private:
     std::vector<OpCode> opcodes;
     std::string name;
-    std::vector<Parameter> parameters;
-    std::vector<Local> locals;
+    std::unordered_map<std::string, Parameter> parameters;
+    std::unordered_map<std::string, Local> locals;
     size_t maxstack;
 };

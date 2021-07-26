@@ -6,6 +6,7 @@
 #include <boost/program_options.hpp>
 
 #include "compiler.h"
+#include "utf8lib.h"
 
 namespace bpo = boost::program_options;
 namespace fs = std::filesystem;
@@ -23,11 +24,12 @@ std::string readFile(fs::path&& path) noexcept
     const auto sz = fs::file_size(path);
     std::string txt(sz, 0);
     f.read(txt.data(), sz);
+    f.close();
     return txt;
 }
 
 
-int main(int argc, char* argv[]) noexcept
+int main(int argc, char* argv[])
 {
     bpo::options_description desc("All options");
 
@@ -50,7 +52,7 @@ int main(int argc, char* argv[]) noexcept
         std::string outputFilename = vm.contains("out") ? vm["out"].as<std::string>() : "out.ree";
 
         std::ofstream fout(outputFilename, std::ios::binary);
-        Compiler<std::ofstream> compiler{std::move(code), fout};
+        Compiler compiler{std::move(code), fout};
         compiler.build();
     }
 

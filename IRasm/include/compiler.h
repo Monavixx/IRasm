@@ -15,9 +15,7 @@ using namespace std::string_literals;
 
 /**
  * @brief the class responsible for compiling the program
- * @tparam _OutputStream the type of stream to which the compiled data will be written
  */
-template<class _OutputStream>
 class Compiler
 {
 public:
@@ -27,7 +25,7 @@ public:
      * @param code the code to be compiled
      * @param fout the stream to which the compiled data will be directed
      */
-    Compiler(std::string&& code, _OutputStream& fout) noexcept : code{std::move(code)}, fout{fout}
+    Compiler(std::string&& code, std::ofstream& fout) noexcept : code{std::move(code)}, fout{fout}
     {
     }
 
@@ -39,7 +37,7 @@ public:
 
 private:
     std::string code;
-    _OutputStream& fout;
+    std::ofstream& fout;
 
     // bytecode version
     constexpr static inline int version = 1;
@@ -47,25 +45,39 @@ private:
 
 
 
-template<class _OutputStream>
-inline void Compiler<_OutputStream>::build()
+void Compiler::build()
 {
     Lexer lexer{ move(code) };
     std::vector<Token> tokens;
     try {
         tokens = lexer.separation();
     }
-    catch (const all_exception& e) {
-        fmt::print(stderr, "{}", e.what() + '\n');
+    catch (const std::exception& e) {
+        print(stderr, "{}", e.what());
     }
 
     Parser parser(move(tokens));
     try {
         parser.parse();
     }
-    catch (const all_exception& e) {
-        fmt::print(stderr, "{}", e.what() + '\n');
+    catch (const std::exception& e) {
+        print(stderr, "{}", e.what());
     }
 
     balib::writeNum(fout, version);
+    balib::writeString(fout, parser.get_assembly().name);
+    balib::writeString(fout, parser.get_assembly().version);
+    balib::writeNum(fout, parser.get_include_assembly().size());
+    for (auto& item : parser.get_include_assembly()) {
+        balib::writeString(fout, item);
+    }
+    balib::writeNum(fout, parser.get_functions().size());
+    try {
+        for (auto& item : parser.get_functions()) {
+            item.build(fout);
+        }
+    }
+    catch (const std::exception& e) {
+        print(stderr, "{}", e.what());
+    }
 }

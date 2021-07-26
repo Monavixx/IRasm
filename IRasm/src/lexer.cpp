@@ -25,58 +25,72 @@ std::vector<Token> Lexer::separation()
         lastLineOpenQuote = 1;
     std::string temp;
     bool isOpenQuote = false;
+    unsigned char amountSlash = 0;
+    bool isComment = false;
     
     for (size_t i = 0; i < code.size(); ++i) {
         if (code[i] == '\n') {
             ++currentLine;
+            amountSlash = 0;
+            isComment = false;
         }
-
-        if (sepsContains(code[i]) && !isOpenQuote) {
-            if (!temp.empty()) {
-                tokens.emplace_back(move(temp), currentLine);
+        else if (code[i] == '/' && !isOpenQuote) {
+            ++amountSlash;
+            if (amountSlash == 2) {
+                isComment = true;
             }
-            tokens.emplace_back(std::string{code[i]}, currentLine);
-
-            if (code[i] == '[') {
-                ++amountOpenSquareBraces;
-            }
-            else if (code[i] == ']') {
-                --amountOpenSquareBraces;
-            }
-            else if (code[i] == '{') {
-                ++amountOpenCurlyBraces;
-            }
-            else if (code[i] == '}') {
-                --amountOpenCurlyBraces;
-                if (amountOpenSquareBraces != 0) {
-                    throw expected_character_exception{"expected character \"]\" on line " + std::to_string(currentLine)};
-                }
-            }
-            else if (code[i] == ';') {
-                if (amountOpenSquareBraces != 0) {
-                    throw expected_character_exception{"expected character \"]\" on line " + std::to_string(currentLine)};
-                }
-            }
-            continue;
         }
-        else if ((code[i] == ' ' || code[i] == '\t' || code[i] == '\n') && !isOpenQuote) {
-            if (!temp.empty()) {
-                tokens.emplace_back(move(temp), currentLine);
-            }
-            continue;
-        }
-        else if (code[i] == '"') {
-            isOpenQuote = !isOpenQuote;
-            if (isOpenQuote) {
-                lastLineOpenQuote = currentLine;
+        if (!isComment)
+        {
+            if (sepsContains(code[i]) && !isOpenQuote) {
                 if (!temp.empty()) {
                     tokens.emplace_back(move(temp), currentLine);
                 }
+                tokens.emplace_back(std::string(1, code[i]), currentLine);
+
+                if (code[i] == '[') {
+                    ++amountOpenSquareBraces;
+                }
+                else if (code[i] == ']') {
+                    --amountOpenSquareBraces;
+                }
+                else if (code[i] == '{') {
+                    ++amountOpenCurlyBraces;
+                }
+                else if (code[i] == '}') {
+                    --amountOpenCurlyBraces;
+                    if (amountOpenSquareBraces != 0) {
+                        throw expected_character_exception{ "expected character \"]\" on line " + std::to_string(currentLine) };
+                    }
+                }
+                else if (code[i] == ';') {
+                    if (amountOpenSquareBraces != 0) {
+                        throw expected_character_exception{ "expected character \"]\" on line " + std::to_string(currentLine) };
+                    }
+                }
+                continue;
             }
-            continue;
-        }
-        else {
-            temp += code[i];
+            else if ((code[i] == ' ' || code[i] == '\t' || code[i] == '\n') && !isOpenQuote) {
+                if (!temp.empty()) {
+                    tokens.emplace_back(std::move(temp), currentLine);
+                }
+                continue;
+            }
+            else if (code[i] == '"') {
+                bool isntempt = !temp.empty();
+                temp += '"';
+                isOpenQuote = !isOpenQuote;
+                if (isOpenQuote) {
+                    lastLineOpenQuote = currentLine;
+                    if (isntempt) {
+                        tokens.emplace_back(std::move(temp), currentLine);
+                    }
+                }
+                continue;
+            }
+            else if (!(code[i] == '/' && !isOpenQuote)) {
+                temp += code[i];
+            }
         }
     }
     if (isOpenQuote) {

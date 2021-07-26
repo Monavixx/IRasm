@@ -18,6 +18,16 @@ class Parser
 {
 public:
     /**
+     * @brief structure storing assembly information
+     */
+    struct _Assembly
+    {
+        std::string name;
+        std::string version;
+    };
+
+public:
+    /**
      * @brief a constructor that takes a list of tokens to be processed
      * 
      * \param tokens list of tokens to be processed
@@ -32,15 +42,11 @@ public:
      */
     void parse();
 
-public:
-    /**
-     * @brief structure storing assembly information
-     */
-    struct _Assembly
-    {
-        std::string name;
-        std::string version;
-    };
+
+    std::vector<Function>& get_functions() noexcept { return functions; }
+    _Assembly& get_assembly() noexcept { return assembly; }
+    std::vector<std::string>& get_include_assembly() noexcept { return includeAssembly; }
+
 
 private:
     std::vector<Token> tokens;
