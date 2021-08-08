@@ -2,7 +2,7 @@
 #include "function.h"
 #include <fmt/core.h>
 
-void ih::pstr(Buffer& outputStream, Function& func, OpCode& opcode)
+void ih::pstr(std::ofstream& outputStream, Function& func, OpCode& opcode)
 {
 	if (opcode.get_tokens().size() == 1) {
 		std::string& txt = opcode.get_tokens()[0].get_word();
@@ -15,7 +15,7 @@ void ih::pstr(Buffer& outputStream, Function& func, OpCode& opcode)
 	}
 }
 
-void ih::call(Buffer& outputStream, Function& func, OpCode& opcode)
+void ih::call(std::ofstream& outputStream, Function& func, OpCode& opcode)
 {
 	auto& tokens = opcode.get_tokens();
 	if (tokens[0].get_type() == Token::Type::OPEN_SQUARE_BRACE) {

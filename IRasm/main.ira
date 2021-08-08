@@ -11,6 +11,6 @@ include-assembly
 
 main() locals:{} maxstack:1
 {
-    pstr "привет мир!"
-    call [rvm-console]Relax.Console(string)
+    pstr "hello world"
+    call [rvm-console]Relax.Console.Print(string)
 }

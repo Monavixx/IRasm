@@ -52,14 +52,12 @@ public:
         }
         balib::writeNum(outputStream, maxstack);
 
-        Buffer opcodesBuffer;
+        //Buffer opcodesBuffer;
 
+        balib::writeNum(outputStream, opcodes.size());
         for (auto& item : opcodes) {
-            item.build(opcodesBuffer, *this);
+            item.build(outputStream, *this);
         }
-        
-        balib::writeNum(outputStream, opcodesBuffer.size());
-        balib::writeStdArray(outputStream, opcodesBuffer.readAll());
     }
 
 private:

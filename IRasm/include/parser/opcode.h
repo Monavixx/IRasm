@@ -28,7 +28,7 @@ public:
     size_t get_number_line() const noexcept { return numberLine; }
     std::vector<Token>& get_tokens() noexcept { return tokens; }
 
-    void build(Buffer& outputStream, class Function& function);
+    void build(std::ofstream& outputStream, class Function& function);
 
 private:
     std::string name;
@@ -43,7 +43,7 @@ public:
         CALL
     };
 
-    static inline std::unordered_map<std::string, std::pair<Type, std::function<void(Buffer&, class Function&, OpCode&)>>> metainfoInstructions = {
+    static inline std::unordered_map<std::string, std::pair<Type, std::function<void(std::ofstream&, class Function&, OpCode&)>>> metainfoInstructions = {
         {"pstr", {Type::PSTR, ih::pstr}},
         {"call", {Type::CALL, ih::call}},
     };
